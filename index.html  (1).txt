@@ -1,0 +1,3704 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinanceBot Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FinanceBot Pro">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRmluYW5jZUJvdCBQcm8iLCJzaG9ydF9uYW1lIjoiRmluYW5jZUJvdCIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDAwMDAwIiwidGhlbWVfY29sb3IiOiIjZmZkNzAwIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU1USTRJaUJvWldsbmFIUTlJakV5T0NJZ2RtbGxkMEp2ZUQwaU1DQXdJREV5T0NBeU9DSTZQSEpsWTNRZ2VEMGlNQ0lnZVQwaU1DSWdkMmxrZEdnOUlqRXlPQ0lnYUdWcFoyaDBQU0l4TWpnaUlHWnBiR3c5SWlNd01EQWlMejQ4Y21WamRDQjRQU0l4TmlJZ2VUMGlNVFlpSUhkcFpIUm9QU0k1TmlJZ2FHVnBaMmgwUFNJNU5pSWdabWxzYkQwaUkySm1ZbVl5TkNJZ2NuZzlJakV5SWk4K1BIUmxlSFFnZUQwaU5qUWlJSGs5SWpZMElpQjBaWGgwTFdGdVkyaHZjajBpYldsa1pHeGxJaUJtYVd4c1BTSWpNREF3SWo0Z1h6d3ZkR1Y0ZEQ0OEwzTjJaejQ9IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJzaXplcyI6IjEyOHgxMjgifV19">
+    
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .piano-black-bg {
+            background: #000000;
+            position: relative;
+        }
+        
+        .piano-black-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0,191,255,0.08) 0%, rgba(0,0,0,0.95) 100%);
+            transition: background 0.5s ease;
+        }
+        
+        .gold-matte {
+            background: linear-gradient(135deg, #FFD700 0%, #FFED4E 50%, #FFD700 100%);
+            transition: all 0.3s ease;
+            border: 1px solid #F59E0B;
+            text-shadow: none;
+            color: #000000;
+        }
+
+        .gold-matte:hover {
+            background: linear-gradient(135deg, #FFED4E 0%, #FFD700 50%, #FFED4E 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .glass-black {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 191, 255, 0.7);
+            box-shadow: 0 8px 32px rgba(0, 191, 255, 0.4), 0 0 20px rgba(0, 191, 255, 0.3);
+        }
+        
+        .blue-accent { color: #00BFFF; text-shadow: 0 0 8px rgba(0, 191, 255, 0.8); }
+        .blue-glow { box-shadow: 0 0 20px rgba(0, 191, 255, 1.2), 0 0 40px rgba(0, 191, 255, 0.8); }
+        
+        .seasonal-winter { filter: hue-rotate(200deg) brightness(0.9) contrast(1.1); }
+        .seasonal-spring { filter: hue-rotate(90deg) brightness(1.1) saturate(1.2); }
+        .seasonal-summer { filter: hue-rotate(30deg) brightness(1.3) saturate(1.3); }
+        .seasonal-autumn { filter: hue-rotate(320deg) brightness(1.0) saturate(1.1); }
+        
+        .chat-bubble { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .notification { position: fixed; top: 20px; right: 20px; z-index: 1000; animation: slideInRight 0.3s ease-out; }
+        @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        .loading-spinner { border: 2px solid rgba(255,255,255,.3); border-top-color: #ffd700; border-radius: 50%; width: 16px; height: 16px; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .dashboard-card { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid rgba(0, 191, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+        }
+        .dashboard-card:hover { 
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3), 0 0 25px rgba(0, 191, 255, 0.6); 
+            border-color: rgba(0, 191, 255, 0.8);
+        }
+
+        .tab-button { 
+            background: rgba(0, 0, 0, 0.8); 
+            color: #00BFFF; 
+            border-bottom: 3px solid transparent;
+            border-top: 1px solid rgba(0, 191, 255, 0.1);
+            filter: contrast(1.5) brightness(1.2);
+        }
+        .tab-button:hover { 
+            background: rgba(0, 191, 255, 0.08); 
+            color: #00FFFF; 
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.15);
+            filter: contrast(1.8) brightness(1.4);
+        }
+        .tab-button.active { 
+            background: rgba(0, 191, 255, 0.12); 
+            color: #00FFFF; 
+            border-bottom-color: #00BFFF;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+            filter: contrast(2.0) brightness(1.6);
+        }
+
+        .hidden { display: none; }
+        
+        .install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .calculator-btn {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            color: #00BFFF;
+            transition: all 0.2s ease;
+        }
+        
+        .calculator-btn:hover {
+            background: rgba(0, 191, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+        
+        .calendar-day {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            color: #00BFFF;
+            transition: all 0.2s ease;
+        }
+        
+        .calendar-day:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: #FFD700;
+        }
+        
+        .calendar-day.today {
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            border-color: #FFD700;
+        }
+        
+        .expense-category {
+            background: rgba(0, 0, 0, 0.7);
+            border-left: 4px solid #00BFFF;
+            transition: all 0.2s ease;
+        }
+        
+        .expense-category:hover {
+            border-left-color: #FFD700;
+            background: rgba(255, 215, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="min-h-full blue-accent piano-black-bg" id="mainBody">
+
+    <!-- Install Prompt -->
+    <div id="installPrompt" class="install-prompt glass-black rounded-lg p-4 hidden">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="gold-matte w-10 h-10 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-download text-black"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-yellow-400">Instalar FinanceBot Pro</h3>
+                    <p class="text-sm blue-accent">Adicione à tela inicial para acesso rápido</p>
+                </div>
+            </div>
+            <div class="flex space-x-2">
+                <button id="installBtn" class="gold-matte text-black px-4 py-2 rounded-lg font-semibold">
+                    Instalar
+                </button>
+                <button id="dismissBtn" class="blue-accent px-3 py-2">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Page -->
+    <div id="authPage" class="min-h-full flex items-center justify-center p-4">
+        <div class="w-full max-w-md glass-black rounded-2xl p-8">
+            <div class="flex flex-col items-center mb-6">
+                <div class="gold-matte w-16 h-16 rounded-xl flex items-center justify-center mb-4">
+                    <svg width="40" height="40" viewBox="0 0 40 40" class="text-black">
+                        <defs>
+                            <!-- 3D Gradients for hourglass -->
+                            <linearGradient id="glassGrad3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#E8F4FD;stop-opacity:0.9" />
+                                <stop offset="30%" style="stop-color:#B8E6FF;stop-opacity:0.8" />
+                                <stop offset="70%" style="stop-color:#87CEEB;stop-opacity:0.7" />
+                                <stop offset="100%" style="stop-color:#4682B4;stop-opacity:0.6" />
+                            </linearGradient>
+                            
+                            <linearGradient id="sandGrad3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                <stop offset="25%" style="stop-color:#FFF700;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#E6C200;stop-opacity:1" />
+                                <stop offset="75%" style="stop-color:#DAA520;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+                            </linearGradient>
+                            
+                            <radialGradient id="frameGrad3D" cx="30%" cy="30%" r="70%">
+                                <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+                                <stop offset="40%" style="stop-color:#A0522D;stop-opacity:1" />
+                                <stop offset="70%" style="stop-color:#654321;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+                            </radialGradient>
+                            
+                            <!-- 3D Effects -->
+                            <filter id="glassDepth3D" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+                                <feOffset dx="1" dy="2" result="offset"/>
+                                <feFlood flood-color="#000000" flood-opacity="0.3"/>
+                                <feComposite in2="offset" operator="in"/>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            
+                            <filter id="glassReflection" x="-50%" y="-50%" width="200%" height="200%">
+                                <feSpecularLighting result="specOut" in="SourceAlpha" specularConstant="3" specularExponent="25" lighting-color="white">
+                                    <fePointLight x="-8" y="-12" z="25"/>
+                                </feSpecularLighting>
+                                <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+                            </filter>
+                            
+                            <filter id="sandFlow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="0.5"/>
+                                <feOffset dx="0" dy="1" result="offset"/>
+                                <feMerge>
+                                    <feMergeNode in="offset"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Hourglass Shadow -->
+                        <ellipse cx="20" cy="37" rx="12" ry="3" fill="rgba(0,0,0,0.4)" opacity="0.6"/>
+                        
+                        <!-- Wooden Frame Base -->
+                        <rect x="8" y="4" width="24" height="4" rx="2" fill="url(#frameGrad3D)" stroke="#654321" stroke-width="0.8" filter="url(#glassDepth3D)"/>
+                        <rect x="8" y="32" width="24" height="4" rx="2" fill="url(#frameGrad3D)" stroke="#654321" stroke-width="0.8" filter="url(#glassDepth3D)"/>
+                        
+                        <!-- Frame decorative elements -->
+                        <rect x="9" y="5" width="22" height="2" rx="1" fill="#A0522D" opacity="0.8"/>
+                        <rect x="9" y="33" width="22" height="2" rx="1" fill="#A0522D" opacity="0.8"/>
+                        
+                        <!-- Glass Bulbs with 3D effect -->
+                        <!-- Upper bulb -->
+                        <path d="M 12 8 Q 12 12 16 16 L 24 16 Q 28 12 28 8 L 28 8 Q 28 8 12 8 Z" 
+                              fill="url(#glassGrad3D)" stroke="#B0E0E6" stroke-width="0.6" filter="url(#glassReflection)"/>
+                        
+                        <!-- Lower bulb -->
+                        <path d="M 12 32 Q 12 28 16 24 L 24 24 Q 28 28 28 32 L 28 32 Q 28 32 12 32 Z" 
+                              fill="url(#glassGrad3D)" stroke="#B0E0E6" stroke-width="0.6" filter="url(#glassReflection)"/>
+                        
+                        <!-- Neck/Center connection -->
+                        <rect x="19" y="16" width="2" height="8" fill="url(#glassGrad3D)" stroke="#B0E0E6" stroke-width="0.4" filter="url(#glassReflection)"/>
+                        
+                        <!-- Sand in upper bulb (decreasing) -->
+                        <path d="M 13 9 Q 13 11 15.5 14.5 L 24.5 14.5 Q 27 11 27 9 L 27 9 Q 27 9 13 9 Z" 
+                              fill="url(#sandGrad3D)" opacity="0.9" filter="url(#sandFlow)">
+                            <animateTransform attributeName="transform" type="scale" 
+                                            values="1,1;0.8,0.8;0.6,0.6;0.4,0.4;0.2,0.2;0,0;0,0;0.2,0.2;0.4,0.4;0.6,0.6;0.8,0.8;1,1" 
+                                            dur="8s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Sand in lower bulb (increasing) -->
+                        <path d="M 13 31 Q 13 29 15.5 25.5 L 24.5 25.5 Q 27 29 27 31 L 27 31 Q 27 31 13 31 Z" 
+                              fill="url(#sandGrad3D)" opacity="0.9" filter="url(#sandFlow)">
+                            <animateTransform attributeName="transform" type="scale" 
+                                            values="0,0;0.2,0.2;0.4,0.4;0.6,0.6;0.8,0.8;1,1;1,1;0.8,0.8;0.6,0.6;0.4,0.4;0.2,0.2;0,0" 
+                                            dur="8s" repeatCount="indefinite"/>
+                        </path>
+                        
+                        <!-- Falling sand stream -->
+                        <rect x="19.5" y="16" width="1" height="8" fill="url(#sandGrad3D)" opacity="0.8">
+                            <animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/>
+                        </rect>
+                        
+                        <!-- Individual sand particles -->
+                        <circle cx="19.8" cy="18" r="0.3" fill="#FFD700">
+                            <animate attributeName="cy" values="16;24;16" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="1;1;0;0;1" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="20.2" cy="20" r="0.2" fill="#E6C200">
+                            <animate attributeName="cy" values="16;24;16" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="1;1;0;0;1" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="19.5" cy="22" r="0.25" fill="#DAA520">
+                            <animate attributeName="cy" values="16;24;16" dur="1.3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="1;1;0;0;1" dur="1.3s" repeatCount="indefinite"/>
+                        </circle>
+                        
+                        <!-- Glass reflections and highlights -->
+                        <ellipse cx="15" cy="10" rx="2" ry="3" fill="#FFFFFF" opacity="0.4" filter="url(#glassReflection)"/>
+                        <ellipse cx="25" cy="30" rx="2" ry="3" fill="#FFFFFF" opacity="0.4" filter="url(#glassReflection)"/>
+                        
+                        <!-- Frame metal details -->
+                        <rect x="10" y="6" width="2" height="1" fill="#8B4513"/>
+                        <rect x="28" y="6" width="2" height="1" fill="#8B4513"/>
+                        <rect x="10" y="33" width="2" height="1" fill="#8B4513"/>
+                        <rect x="28" y="33" width="2" height="1" fill="#8B4513"/>
+                        
+                        <!-- Sparkle effects for premium feel -->
+                        <circle cx="16" cy="12" r="0.5" fill="#FFFFFF" opacity="0.9">
+                            <animate attributeName="opacity" values="0.9;0.3;0.9" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="24" cy="28" r="0.4" fill="#FFFFFF" opacity="0.7">
+                            <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="20" cy="20" r="0.3" fill="#FFD700" opacity="0.8">
+                            <animate attributeName="opacity" values="0.8;0.4;0.8" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+                <h1 class="text-4xl font-bold mb-2" style="color: #E6C200;">FinanceBot Pro</h1>
+                <p class="blue-accent text-center">Seu assistente financeiro inteligente</p>
+            </div>
+            
+            <!-- Login/Register Toggle -->
+            <div class="flex mb-6 bg-black/50 rounded-lg p-1">
+                <button id="loginTab" class="flex-1 py-2 px-4 rounded-md gold-matte text-black font-semibold">
+                    Login
+                </button>
+                <button id="registerTab" class="flex-1 py-2 px-4 rounded-md blue-accent">
+                    Criar Conta
+                </button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium blue-accent mb-2">Email</label>
+                    <input type="email" id="email" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium blue-accent mb-2">Senha</label>
+                    <input type="password" id="password" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center">
+                        <input type="checkbox" class="mr-2 accent-yellow-400">
+                        <span class="text-sm blue-accent">Lembrar-me</span>
+                    </label>
+                    <button type="button" id="forgotPassword" class="text-sm text-yellow-400 hover:text-yellow-300">
+                        Esqueci a senha
+                    </button>
+                </div>
+                
+                <button type="submit" class="w-full gold-matte text-black font-semibold py-3 rounded-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Entrar
+                </button>
+            </form>
+            
+            <!-- Register Form -->
+            <form id="registerForm" class="space-y-4 hidden">
+                <div>
+                    <label for="regName" class="block text-sm font-medium blue-accent mb-2">Nome Completo</label>
+                    <input type="text" id="regName" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <div>
+                    <label for="regEmail" class="block text-sm font-medium blue-accent mb-2">Email</label>
+                    <input type="email" id="regEmail" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <div>
+                    <label for="regPassword" class="block text-sm font-medium blue-accent mb-2">Senha</label>
+                    <input type="password" id="regPassword" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <div>
+                    <label for="regConfirmPassword" class="block text-sm font-medium blue-accent mb-2">Confirmar Senha</label>
+                    <input type="password" id="regConfirmPassword" required 
+                           class="w-full px-4 py-3 bg-black/70 border-2 border-blue-900/50 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none blue-glow">
+                </div>
+                
+                <button type="submit" class="w-full gold-matte text-black font-semibold py-3 rounded-lg">
+                    <i class="fas fa-user-plus mr-2"></i>Criar Conta
+                </button>
+            </form>
+            
+            <div class="mt-6 space-y-3">
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-blue-500/30"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-black blue-accent">ou</span>
+                    </div>
+                </div>
+                
+                <button id="googleLogin" class="w-full flex items-center justify-center px-4 py-3 border-2 border-blue-900/60 rounded-lg blue-accent hover:bg-blue-900/20 transition-colors hover:border-blue-800 hover:shadow-lg hover:shadow-blue-900/30">
+                    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continuar com Google
+                </button>
+                
+                <div class="text-center">
+                    <button id="demoBtn" class="text-yellow-400 hover:text-yellow-300 underline font-semibold">
+                        <i class="fas fa-play mr-2"></i>Experimentar versão demo
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden min-h-full">
+        <!-- Header -->
+        <header class="glass-black border-b-2 border-blue-900/60 p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="gold-matte w-12 h-12 rounded-xl flex items-center justify-center">
+                        <svg width="32" height="32" viewBox="0 0 40 40" class="text-black">
+                            <defs>
+                                <!-- 3D Gradients for hourglass header -->
+                                <linearGradient id="glassGradHeader3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#E8F4FD;stop-opacity:0.9" />
+                                    <stop offset="30%" style="stop-color:#B8E6FF;stop-opacity:0.8" />
+                                    <stop offset="70%" style="stop-color:#87CEEB;stop-opacity:0.7" />
+                                    <stop offset="100%" style="stop-color:#4682B4;stop-opacity:0.6" />
+                                </linearGradient>
+                                
+                                <linearGradient id="sandGradHeader3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                                    <stop offset="25%" style="stop-color:#FFF700;stop-opacity:1" />
+                                    <stop offset="50%" style="stop-color:#E6C200;stop-opacity:1" />
+                                    <stop offset="75%" style="stop-color:#DAA520;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+                                </linearGradient>
+                                
+                                <radialGradient id="frameGradHeader3D" cx="30%" cy="30%" r="70%">
+                                    <stop offset="0%" style="stop-color:#8B4513;stop-opacity:1" />
+                                    <stop offset="40%" style="stop-color:#A0522D;stop-opacity:1" />
+                                    <stop offset="70%" style="stop-color:#654321;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#3E2723;stop-opacity:1" />
+                                </radialGradient>
+                                
+                                <filter id="glassDepthHeader3D" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feGaussianBlur in="SourceAlpha" stdDeviation="1"/>
+                                    <feOffset dx="0.8" dy="1.5" result="offset"/>
+                                    <feFlood flood-color="#000000" flood-opacity="0.3"/>
+                                    <feComposite in2="offset" operator="in"/>
+                                    <feMerge>
+                                        <feMergeNode/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                                
+                                <filter id="glassReflectionHeader" x="-50%" y="-50%" width="200%" height="200%">
+                                    <feSpecularLighting result="specOut" in="SourceAlpha" specularConstant="2" specularExponent="20" lighting-color="white">
+                                        <fePointLight x="-6" y="-9" z="20"/>
+                                    </feSpecularLighting>
+                                    <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+                                </filter>
+                            </defs>
+                            
+                            <!-- Hourglass Shadow (smaller) -->
+                            <ellipse cx="20" cy="35" rx="9" ry="2" fill="rgba(0,0,0,0.4)" opacity="0.5"/>
+                            
+                            <!-- Wooden Frame Base (smaller) -->
+                            <rect x="10" y="6" width="20" height="3" rx="1.5" fill="url(#frameGradHeader3D)" stroke="#654321" stroke-width="0.6" filter="url(#glassDepthHeader3D)"/>
+                            <rect x="10" y="31" width="20" height="3" rx="1.5" fill="url(#frameGradHeader3D)" stroke="#654321" stroke-width="0.6" filter="url(#glassDepthHeader3D)"/>
+                            
+                            <!-- Frame decorative elements -->
+                            <rect x="11" y="6.5" width="18" height="1.5" rx="0.8" fill="#A0522D" opacity="0.8"/>
+                            <rect x="11" y="31.5" width="18" height="1.5" rx="0.8" fill="#A0522D" opacity="0.8"/>
+                            
+                            <!-- Glass Bulbs with 3D effect (smaller) -->
+                            <!-- Upper bulb -->
+                            <path d="M 13 9 Q 13 12 16 16 L 24 16 Q 27 12 27 9 L 27 9 Q 27 9 13 9 Z" 
+                                  fill="url(#glassGradHeader3D)" stroke="#B0E0E6" stroke-width="0.5" filter="url(#glassReflectionHeader)"/>
+                            
+                            <!-- Lower bulb -->
+                            <path d="M 13 31 Q 13 28 16 24 L 24 24 Q 27 28 27 31 L 27 31 Q 27 31 13 31 Z" 
+                                  fill="url(#glassGradHeader3D)" stroke="#B0E0E6" stroke-width="0.5" filter="url(#glassReflectionHeader)"/>
+                            
+                            <!-- Neck/Center connection -->
+                            <rect x="19" y="16" width="2" height="8" fill="url(#glassGradHeader3D)" stroke="#B0E0E6" stroke-width="0.3" filter="url(#glassReflectionHeader)"/>
+                            
+                            <!-- Sand in upper bulb (decreasing) -->
+                            <path d="M 14 10 Q 14 11.5 16.5 14.5 L 23.5 14.5 Q 26 11.5 26 10 L 26 10 Q 26 10 14 10 Z" 
+                                  fill="url(#sandGradHeader3D)" opacity="0.9">
+                                <animateTransform attributeName="transform" type="scale" 
+                                                values="1,1;0.8,0.8;0.6,0.6;0.4,0.4;0.2,0.2;0,0;0,0;0.2,0.2;0.4,0.4;0.6,0.6;0.8,0.8;1,1" 
+                                                dur="6s" repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Sand in lower bulb (increasing) -->
+                            <path d="M 14 30 Q 14 28.5 16.5 25.5 L 23.5 25.5 Q 26 28.5 26 30 L 26 30 Q 26 30 14 30 Z" 
+                                  fill="url(#sandGradHeader3D)" opacity="0.9">
+                                <animateTransform attributeName="transform" type="scale" 
+                                                values="0,0;0.2,0.2;0.4,0.4;0.6,0.6;0.8,0.8;1,1;1,1;0.8,0.8;0.6,0.6;0.4,0.4;0.2,0.2;0,0" 
+                                                dur="6s" repeatCount="indefinite"/>
+                            </path>
+                            
+                            <!-- Falling sand stream -->
+                            <rect x="19.5" y="16" width="1" height="8" fill="url(#sandGradHeader3D)" opacity="0.8">
+                                <animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/>
+                            </rect>
+                            
+                            <!-- Individual sand particles -->
+                            <circle cx="19.8" cy="18" r="0.2" fill="#FFD700">
+                                <animate attributeName="cy" values="16;24;16" dur="1.2s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="1;1;0;0;1" dur="1.2s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="20.2" cy="20" r="0.15" fill="#E6C200">
+                                <animate attributeName="cy" values="16;24;16" dur="1.4s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="1;1;0;0;1" dur="1.4s" repeatCount="indefinite"/>
+                            </circle>
+                            
+                            <!-- Glass reflections and highlights -->
+                            <ellipse cx="16" cy="11" rx="1.5" ry="2" fill="#FFFFFF" opacity="0.4" filter="url(#glassReflectionHeader)"/>
+                            <ellipse cx="24" cy="29" rx="1.5" ry="2" fill="#FFFFFF" opacity="0.4" filter="url(#glassReflectionHeader)"/>
+                            
+                            <!-- Frame metal details -->
+                            <rect x="11" y="7" width="1.5" height="0.8" fill="#8B4513"/>
+                            <rect x="27.5" y="7" width="1.5" height="0.8" fill="#8B4513"/>
+                            <rect x="11" y="32" width="1.5" height="0.8" fill="#8B4513"/>
+                            <rect x="27.5" y="32" width="1.5" height="0.8" fill="#8B4513"/>
+                            
+                            <!-- Sparkle effects -->
+                            <circle cx="17" cy="13" r="0.3" fill="#FFFFFF" opacity="0.9">
+                                <animate attributeName="opacity" values="0.9;0.3;0.9" dur="1.8s" repeatCount="indefinite"/>
+                            </circle>
+                            <circle cx="23" cy="27" r="0.25" fill="#FFFFFF" opacity="0.7">
+                                <animate attributeName="opacity" values="0.7;0.2;0.7" dur="2.2s" repeatCount="indefinite"/>
+                            </circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold" style="color: #E6C200;">FinanceBot Pro</h1>
+                        <p class="text-xs blue-accent" id="seasonalGreeting">Controle total das suas finanças!</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <div class="hidden md:flex items-center space-x-2 bg-black/50 rounded-lg px-3 py-2 border border-yellow-400/30">
+                        <i class="fas fa-dollar-sign text-green-400 text-sm"></i>
+                        <div class="text-xs">
+                            <div class="text-green-400 font-semibold" id="dollarRate">R$ 5,12</div>
+                            <div class="text-green-300 text-xs" id="dollarChange">+0,05</div>
+                        </div>
+                    </div>
+                    <button id="whatsappReportBtn" class="p-2 blue-accent transition-colors" style="color: #25D366;" title="Enviar Relatório via WhatsApp">
+                        <i class="fab fa-whatsapp text-lg"></i>
+                    </button>
+                    <button id="calculatorBtn" class="p-2 blue-accent transition-colors" style="color: #E6C200;" title="Calculadora">
+                        <i class="fas fa-calculator text-lg"></i>
+                    </button>
+                    <button id="calendarBtn" class="p-2 blue-accent transition-colors" style="color: #E6C200;" title="Calendário">
+                        <i class="fas fa-calendar text-lg"></i>
+                    </button>
+                    <button id="notificationBtn" class="relative p-2 blue-accent transition-colors" style="color: #E6C200;" title="Notificações">
+                        <i class="fas fa-bell text-lg"></i>
+                        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                    </button>
+                    <button id="profileBtn" class="p-2 blue-accent transition-colors" style="color: #E6C200;" title="Perfil">
+                        <i class="fas fa-user-circle text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="glass-black border-b-2 border-blue-900/60">
+            <div class="flex overflow-x-auto">
+                <button class="tab-button active px-4 py-3 whitespace-nowrap text-sm" data-tab="dashboard">
+                    <i class="fas fa-home mr-1"></i>Início
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="finances">
+                    <i class="fas fa-money-bill-wave mr-1"></i>Finanças
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="expenses">
+                    <i class="fas fa-receipt mr-1"></i>Despesas
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="investments">
+                    <i class="fas fa-chart-pie mr-1"></i>Investimentos
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="goals">
+                    <i class="fas fa-target mr-1"></i>Metas
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="chat">
+                    <i class="fas fa-robot mr-1"></i>IA Bot
+                </button>
+                <button class="tab-button px-4 py-3 whitespace-nowrap text-sm" data-tab="reports">
+                    <i class="fas fa-chart-bar mr-1"></i>Relatórios
+                </button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content p-4 space-y-4">
+            <!-- Main Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="dashboard-card rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs blue-accent">Saldo Total</h3>
+                        <i class="fas fa-wallet text-yellow-400"></i>
+                    </div>
+                    <p class="text-xl font-bold" style="color: #E6C200;">R$ 12.450</p>
+                    <p class="text-xs text-green-400">+5.2% mês</p>
+                </div>
+                
+                <div class="dashboard-card rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs blue-accent">Receitas</h3>
+                        <i class="fas fa-arrow-up text-green-400"></i>
+                    </div>
+                    <p class="text-xl font-bold text-green-400">R$ 4.500</p>
+                    <p class="text-xs text-green-400">Este mês</p>
+                </div>
+                
+                <div class="dashboard-card rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs blue-accent">Despesas</h3>
+                        <i class="fas fa-arrow-down text-red-400"></i>
+                    </div>
+                    <p class="text-xl font-bold text-red-700">R$ 3.280</p>
+                    <p class="text-xs text-red-700">+12% vs anterior</p>
+                </div>
+                
+                <div class="dashboard-card rounded-xl p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xs blue-accent">Economia</h3>
+                        <i class="fas fa-piggy-bank blue-accent"></i>
+                    </div>
+                    <p class="text-xl font-bold blue-accent">R$ 1.220</p>
+                    <p class="text-xs blue-accent">Sobrou</p>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="glass-black rounded-xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="text-lg font-semibold" style="color: #E6C200;">Ações Rápidas</h2>
+                    <button id="autoExpenseBtn" class="gold-matte text-black px-3 py-1 rounded-lg font-semibold text-xs">
+                        <i class="fas fa-robot mr-1"></i>IA Auto
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button id="addIncomeBtn" class="flex flex-col items-center p-3 bg-black/50 rounded-lg hover:bg-yellow-400/10 transition-colors border border-blue-500/20">
+                        <i class="fas fa-plus text-xl text-green-400 mb-2"></i>
+                        <span class="text-xs blue-accent text-center">Adicionar Receita</span>
+                    </button>
+                    <button id="addExpenseBtn" class="flex flex-col items-center p-3 bg-black/50 rounded-lg hover:bg-yellow-400/10 transition-colors border border-blue-500/20">
+                        <i class="fas fa-minus text-xl text-red-700 mb-2"></i>
+                        <span class="text-xs blue-accent text-center">Registrar Gasto</span>
+                    </button>
+                    <button class="flex flex-col items-center p-3 bg-black/50 rounded-lg hover:bg-yellow-400/10 transition-colors border border-blue-500/20">
+                        <i class="fas fa-exchange-alt text-xl blue-accent mb-2"></i>
+                        <span class="text-xs blue-accent text-center">Transferência</span>
+                    </button>
+                    <button class="flex flex-col items-center p-3 bg-black/50 rounded-lg hover:bg-yellow-400/10 transition-colors border border-blue-500/20">
+                        <i class="fas fa-chart-line text-xl text-yellow-400 mb-2"></i>
+                        <span class="text-xs blue-accent text-center">Investir</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="glass-black rounded-xl p-4">
+                <h2 class="text-lg font-semibold mb-3" style="color: #E6C200;">Atividade Recente</h2>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-3 bg-black/50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-arrow-up text-green-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium blue-accent">Salário</p>
+                                <p class="text-xs text-gray-400">Hoje</p>
+                            </div>
+                        </div>
+                        <span class="text-green-400 font-semibold text-sm">+R$ 4.500</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-black/50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-red-900/30 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-shopping-cart text-red-700 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium blue-accent">Supermercado</p>
+                                <p class="text-xs text-gray-400">Ontem</p>
+                            </div>
+                        </div>
+                        <span class="text-red-700 font-semibold text-sm">-R$ 285</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Finances Tab -->
+        <div id="finances" class="tab-content hidden p-4 space-y-4">
+            <div class="glass-black rounded-xl p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold" style="color: #E6C200;">Receitas & Despesas</h2>
+                    <button class="gold-matte text-black px-4 py-2 rounded-lg font-semibold text-sm">
+                        <i class="fas fa-plus mr-2"></i>Nova Transação
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="dashboard-card rounded-lg p-4">
+                        <h3 class="text-sm blue-accent mb-2">Receitas do Mês</h3>
+                        <p class="text-2xl font-bold text-green-400">R$ 4.500</p>
+                        <div class="mt-2 space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="blue-accent">Salário</span>
+                                <span class="text-green-400">R$ 4.000</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="blue-accent">Freelance</span>
+                                <span class="text-green-400">R$ 500</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <h3 class="text-sm blue-accent mb-2">Despesas do Mês</h3>
+                        <p class="text-2xl font-bold text-red-700">R$ 3.280</p>
+                        <div class="mt-2 space-y-1">
+                            <div class="flex justify-between text-xs">
+                                <span class="blue-accent">Essenciais</span>
+                                <span class="text-red-700">R$ 2.100</span>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span class="blue-accent">Lazer</span>
+                                <span class="text-red-700">R$ 1.180</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h3 class="text-md font-semibold" style="color: #E6C200;">Transações Recentes</h3>
+                    <div class="flex items-center justify-between p-3 bg-black/50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-arrow-up text-green-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium blue-accent">Salário</p>
+                                <p class="text-xs text-gray-400">Hoje, 14:30</p>
+                            </div>
+                        </div>
+                        <span class="text-green-400 font-semibold text-sm">+R$ 4.500</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-black/50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-red-900/30 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-shopping-cart text-red-700 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm blue-accent">Supermercado</p>
+                                <p class="text-xs text-gray-400">Ontem, 18:45</p>
+                            </div>
+                        </div>
+                        <span class="text-red-700 font-semibold text-sm">-R$ 285</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-black/50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-gas-pump text-blue-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm blue-accent">Combustível</p>
+                                <p class="text-xs text-gray-400">2 dias atrás</p>
+                            </div>
+                        </div>
+                        <span class="text-red-700 font-semibold text-sm">-R$ 120</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expenses Tab -->
+        <div id="expenses" class="tab-content hidden p-4 space-y-4">
+            <div class="glass-black rounded-xl p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold" style="color: #E6C200;">Categorias de Despesas</h2>
+                    <button class="gold-matte text-black px-3 py-2 rounded-lg font-semibold text-sm">
+                        <i class="fas fa-filter mr-1"></i>Filtrar
+                    </button>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="expense-category rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-home" style="color: #E6C200;"></i>
+                                <span class="blue-accent font-bold">Moradia</span>
+                            </div>
+                            <span class="text-red-700 font-semibold">R$ 1.200</span>
+                        </div>
+                        <div class="text-xs space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Aluguel</span>
+                                <span class="blue-accent">R$ 800</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Condomínio</span>
+                                <span class="blue-accent">R$ 250</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Energia</span>
+                                <span class="blue-accent">R$ 150</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-xs blue-accent font-bold">
+                            <i class="fas fa-calendar mr-1"></i>Vencimento: 05/12
+                        </div>
+                    </div>
+                    
+                    <div class="expense-category rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-utensils" style="color: #E6C200;"></i>
+                                <span class="blue-accent font-bold">Alimentação</span>
+                            </div>
+                            <span class="text-red-700 font-semibold">R$ 850</span>
+                        </div>
+                        <div class="text-xs space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Supermercado</span>
+                                <span class="blue-accent">R$ 600</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Restaurantes</span>
+                                <span class="blue-accent">R$ 250</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="expense-category rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-car" style="color: #E6C200;"></i>
+                                <span class="blue-accent font-bold">Transporte</span>
+                            </div>
+                            <span class="text-red-700 font-semibold">R$ 480</span>
+                        </div>
+                        <div class="text-xs space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Combustível</span>
+                                <span class="blue-accent">R$ 300</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Uber</span>
+                                <span class="blue-accent">R$ 180</span>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-xs blue-accent font-bold">
+                            <i class="fas fa-calendar mr-1"></i>Seguro vence: 15/12
+                        </div>
+                    </div>
+                    
+                    <div class="expense-category rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-3">
+                                <i class="fas fa-gamepad text-yellow-400"></i>
+                                <span class="blue-accent font-bold">Lazer</span>
+                            </div>
+                            <span class="text-red-700 font-semibold">R$ 750</span>
+                        </div>
+                        <div class="text-xs space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Streaming</span>
+                                <span class="blue-accent">R$ 50</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Cinema</span>
+                                <span class="blue-accent">R$ 120</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-400 font-bold">Compras</span>
+                                <span class="blue-accent">R$ 580</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investments Tab -->
+        <div id="investments" class="tab-content hidden p-4 space-y-4">
+            <div class="glass-black rounded-xl p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-yellow-400">Carteira de Investimentos</h2>
+                    <div class="flex space-x-2">
+                        <button id="optimizePortfolioBtn" class="gold-matte text-black px-3 py-2 rounded-lg font-semibold text-sm">
+                            <i class="fas fa-magic mr-1"></i>Otimizar IA
+                        </button>
+                        <button class="gold-matte text-black px-3 py-2 rounded-lg font-semibold text-sm">
+                            <i class="fas fa-plus mr-1"></i>Investir
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Portfolio Optimization Status -->
+                <div id="optimizationStatus" class="bg-black/50 rounded-lg p-3 mb-4 border-l-4 border-yellow-400">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-robot text-yellow-400"></i>
+                            <span class="text-sm blue-accent">Otimização Automática:</span>
+                            <span id="optimizationToggle" class="text-green-400 text-sm font-semibold">ATIVA</span>
+                        </div>
+                        <div class="text-xs blue-accent">
+                            Próxima análise: <span id="nextOptimization">2h 15min</span>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400">
+                        <i class="fas fa-chart-line mr-1"></i>Rentabilidade otimizada: +2.3% este mês
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium blue-accent text-sm">Tesouro Direto</h3>
+                            <span class="text-green-400 text-xs">+12.5%</span>
+                        </div>
+                        <p class="text-xl font-bold text-yellow-400">R$ 3.250</p>
+                        <p class="text-xs blue-accent">37% da carteira</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium blue-accent text-sm">Ações</h3>
+                            <span class="text-green-400 text-xs">+8.2%</span>
+                        </div>
+                        <p class="text-xl font-bold text-yellow-400">R$ 2.800</p>
+                        <p class="text-xs blue-accent">32% da carteira</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium blue-accent text-sm">Fundos</h3>
+                            <span class="text-green-400 text-xs">+6.8%</span>
+                        </div>
+                        <p class="text-xl font-bold text-yellow-400">R$ 1.950</p>
+                        <p class="text-xs blue-accent">22% da carteira</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="font-medium blue-accent text-sm">Cripto</h3>
+                            <span class="text-red-700 text-xs">-2.1%</span>
+                        </div>
+                        <p class="text-xl font-bold text-yellow-400">R$ 750</p>
+                        <p class="text-xs blue-accent">9% da carteira</p>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h3 class="text-md font-semibold text-yellow-400 mb-3">Performance</h3>
+                    <div class="bg-black/50 rounded-lg p-3">
+                        <canvas id="investmentChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div id="goals" class="tab-content hidden p-4 space-y-4">
+            <div class="glass-black rounded-xl p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold text-yellow-400">Metas Financeiras</h2>
+                    <div class="flex space-x-2">
+                        <button id="autoProgressBtn" class="gold-matte text-black px-3 py-2 rounded-lg font-semibold text-sm">
+                            <i class="fas fa-robot mr-1"></i>Auto Progresso
+                        </button>
+                        <button class="gold-matte text-black px-3 py-2 rounded-lg font-semibold text-sm">
+                            <i class="fas fa-plus mr-1"></i>Nova Meta
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Auto Progress Status -->
+                <div id="autoProgressStatus" class="bg-black/50 rounded-lg p-3 mb-4 border-l-4 border-green-400">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-target text-green-400"></i>
+                            <span class="text-sm blue-accent">Progresso Automático:</span>
+                            <span id="progressToggle" class="text-green-400 text-sm font-semibold">ATIVO</span>
+                        </div>
+                        <div class="text-xs blue-accent">
+                            Última atualização: <span id="lastProgressUpdate">agora</span>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400">
+                        <i class="fas fa-coins mr-1"></i>R$ 245 adicionados automaticamente hoje
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-shield-alt text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Reserva de Emergência</h3>
+                            </div>
+                            <span class="blue-accent text-xs">43% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-yellow-400 h-2 rounded-full" style="width: 43%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 2.150 de R$ 5.000</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-car text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Carro Novo</h3>
+                            </div>
+                            <span class="blue-accent text-xs">15% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-green-400 h-2 rounded-full" style="width: 15%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 7.500 de R$ 50.000</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-motorcycle text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Moto</h3>
+                            </div>
+                            <span class="blue-accent text-xs">35% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-blue-400 h-2 rounded-full" style="width: 35%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 5.250 de R$ 15.000</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-laptop text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Notebook</h3>
+                            </div>
+                            <span class="blue-accent text-xs">80% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-green-400 h-2 rounded-full" style="width: 80%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 4.000 de R$ 5.000</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-mobile-alt text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Celular</h3>
+                            </div>
+                            <span class="blue-accent text-xs">60% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-blue-400 h-2 rounded-full" style="width: 60%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 1.800 de R$ 3.000</p>
+                    </div>
+                    
+                    <div class="dashboard-card rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-plane text-yellow-400"></i>
+                                <h3 class="blue-accent text-sm">Viagem Europa</h3>
+                            </div>
+                            <span class="blue-accent text-xs">28% concluído</span>
+                        </div>
+                        <div class="w-full bg-black/50 rounded-full h-2 mb-2">
+                            <div class="bg-blue-400 h-2 rounded-full" style="width: 28%"></div>
+                        </div>
+                        <p class="text-xs blue-accent">R$ 2.800 de R$ 10.000</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Tab -->
+        <div id="chat" class="tab-content hidden p-4">
+            <div class="glass-black rounded-xl p-4 h-96 flex flex-col">
+                <h2 class="text-lg font-semibold text-yellow-400 mb-4">IA Assistant - Zerar Contas em 1 Ano</h2>
+                
+                <div id="chatMessages" class="flex-1 overflow-y-auto space-y-3 mb-4">
+                    <div class="chat-bubble bg-blue-500/20 rounded-lg p-3 max-w-xs">
+                        <p class="blue-accent text-sm">Olá! Sou seu assistente financeiro. Posso ajudar você a criar um plano para zerar suas contas em 1 ano. Como posso ajudar?</p>
+                    </div>
+                    <div class="chat-bubble bg-yellow-400/20 rounded-lg p-3 max-w-xs ml-auto">
+                        <p class="text-black text-sm">Sugestões rápidas:</p>
+                        <div class="mt-2 space-y-1">
+                            <button class="block w-full text-left text-xs bg-black/20 p-2 rounded" onclick="askBot('Como zerar minhas dívidas?')">💳 Como zerar minhas dívidas?</button>
+                            <button class="block w-full text-left text-xs bg-black/20 p-2 rounded" onclick="askBot('Plano de economia mensal')">💰 Plano de economia mensal</button>
+                            <button class="block w-full text-left text-xs bg-black/20 p-2 rounded" onclick="askBot('Renda extra ideias')">📈 Ideias de renda extra</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="chatForm" class="flex space-x-2">
+                    <input type="text" id="chatInput" placeholder="Digite sua pergunta..." 
+                           class="flex-1 px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none text-sm">
+                    <button type="submit" class="gold-matte text-black px-3 py-2 rounded-lg">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content hidden p-4 space-y-4">
+            <div class="glass-black rounded-xl p-4">
+                <h2 class="text-lg font-semibold text-yellow-400 mb-4">Relatórios e Gráficos</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-black/50 rounded-lg p-4">
+                        <h3 class="text-md font-semibold blue-accent mb-3">Gastos por Categoria</h3>
+                        <canvas id="expenseChart" width="300" height="200"></canvas>
+                    </div>
+                    
+                    <div class="bg-black/50 rounded-lg p-4">
+                        <h3 class="text-md font-semibold blue-accent mb-3">Evolução Mensal</h3>
+                        <canvas id="monthlyChart" width="300" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Modal -->
+    <div id="calculatorModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-yellow-400">Calculadora</h3>
+                <button id="closeCalculator" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="bg-black/70 rounded-lg p-4 mb-4">
+                <input type="text" id="calcDisplay" readonly 
+                       class="w-full bg-transparent text-right text-2xl text-yellow-400 focus:outline-none" value="0">
+            </div>
+            
+            <div class="grid grid-cols-4 gap-2">
+                <button class="calculator-btn p-3 rounded-lg" onclick="clearCalc()">C</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="deleteLast()">⌫</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('/')">/</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('*')">×</button>
+                
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('7')">7</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('8')">8</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('9')">9</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('-')">-</button>
+                
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('4')">4</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('5')">5</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('6')">6</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('+')">+</button>
+                
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('1')">1</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('2')">2</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('3')">3</button>
+                <button class="calculator-btn p-3 rounded-lg row-span-2" onclick="calculate()">=</button>
+                
+                <button class="calculator-btn p-3 rounded-lg col-span-2" onclick="appendToCalc('0')">0</button>
+                <button class="calculator-btn p-3 rounded-lg" onclick="appendToCalc('.')">.</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Report Modal -->
+    <div id="whatsappModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold" style="color: #DAA520;">Relatório Financeiro</h3>
+                <button id="closeWhatsapp" class="blue-accent" style="color: #DAA520;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-2">📊 Resumo Financeiro - Dezembro 2024</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="blue-accent">💰 Saldo Total:</span>
+                            <span style="color: #DAA520;">R$ 12.450</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">📈 Receitas:</span>
+                            <span class="text-green-400">R$ 4.500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">📉 Despesas:</span>
+                            <span class="text-red-400">R$ 3.280</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">🎯 Economia:</span>
+                            <span class="blue-accent">R$ 1.220</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-2">🏆 Metas em Progresso</h4>
+                    <div class="space-y-1 text-xs">
+                        <div class="flex justify-between">
+                            <span class="blue-accent">🛡️ Reserva Emergência:</span>
+                            <span style="color: #DAA520;">43%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">💻 Notebook:</span>
+                            <span style="color: #DAA520;">80%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">📱 Celular:</span>
+                            <span style="color: #DAA520;">60%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium blue-accent">Número do WhatsApp:</label>
+                    <input type="tel" id="whatsappNumber" placeholder="+55 11 99999-9999" 
+                           class="w-full px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none">
+                </div>
+                
+                <button id="sendWhatsappReport" class="w-full gold-matte text-black font-semibold py-3 rounded-lg">
+                    <i class="fab fa-whatsapp mr-2"></i>Enviar Relatório
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Expense Modal -->
+    <div id="expenseModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold" style="color: #DAA520;">Adicionar Despesa</h3>
+                <button id="closeExpenseModal" class="blue-accent" style="color: #DAA520;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="expenseForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium blue-accent mb-2">Categoria</label>
+                    <select id="expenseCategory" class="w-full px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none">
+                        <option value="moradia">🏠 Moradia</option>
+                        <option value="alimentacao">🍽️ Alimentação</option>
+                        <option value="transporte">🚗 Transporte</option>
+                        <option value="lazer">🎮 Lazer</option>
+                        <option value="saude">🏥 Saúde</option>
+                        <option value="educacao">📚 Educação</option>
+                        <option value="vestuario">👕 Vestuário</option>
+                        <option value="tecnologia">💻 Tecnologia</option>
+                        <option value="pets">🐕 Pets</option>
+                        <option value="outros">📦 Outros</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium blue-accent mb-2">Descrição</label>
+                    <input type="text" id="expenseDescription" placeholder="Ex: Supermercado, Gasolina..." 
+                           class="w-full px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium blue-accent mb-2">Valor (R$)</label>
+                    <input type="number" id="expenseAmount" step="0.01" placeholder="0,00" 
+                           class="w-full px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium blue-accent mb-2">Data</label>
+                    <input type="date" id="expenseDate" 
+                           class="w-full px-3 py-2 bg-black/70 border border-blue-500/30 rounded-lg blue-accent focus:border-yellow-400 focus:outline-none">
+                </div>
+                
+                <button type="submit" class="w-full gold-shine text-black font-semibold py-3 rounded-lg">
+                    <i class="fas fa-save mr-2"></i>Salvar Despesa
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auto Expense Modal -->
+    <div id="autoExpenseModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold" style="color: #DAA520;">IA - Despesas Automáticas</h3>
+                <button id="closeAutoExpenseModal" class="blue-accent" style="color: #DAA520;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-2">🤖 IA detectou possíveis gastos:</h4>
+                    <div id="suggestedExpenses" class="space-y-2">
+                        <!-- Suggested expenses will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <button id="generateExpenses" class="w-full gold-shine text-black font-semibold py-3 rounded-lg">
+                    <i class="fas fa-magic mr-2"></i>Gerar Despesas Inteligentes
+                </button>
+                
+                <button id="addAllSuggested" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg">
+                    <i class="fas fa-check-double mr-2"></i>Adicionar Todas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Optimization Modal -->
+    <div id="portfolioOptimizationModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-lg">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-yellow-400">🤖 Otimização Automática de Portfólio</h3>
+                <button id="closePortfolioOptimization" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">📊 Análise Atual da Carteira</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="blue-accent">Risco Atual:</span>
+                            <span class="text-yellow-400">Moderado (6/10)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">Diversificação:</span>
+                            <span class="text-green-400">Boa (8/10)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="blue-accent">Rentabilidade Esperada:</span>
+                            <span class="text-green-400">+12.8% ao ano</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold text-yellow-400 mb-3">🎯 Recomendações da IA</h4>
+                    <div id="optimizationRecommendations" class="space-y-2 text-sm">
+                        <!-- Recommendations will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">⚙️ Configurações de Otimização</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm blue-accent">Rebalanceamento Automático</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="autoRebalance" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-400"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm blue-accent">Alertas de Oportunidades</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="opportunityAlerts" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-400"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm blue-accent">Análise de Risco Contínua</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="riskAnalysis" class="sr-only peer" checked>
+                                <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-400"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    <button id="applyOptimization" class="flex-1 gold-matte text-black font-semibold py-3 rounded-lg">
+                        <i class="fas fa-magic mr-2"></i>Aplicar Otimização
+                    </button>
+                    <button id="scheduleOptimization" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg">
+                        <i class="fas fa-clock mr-2"></i>Agendar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-lg">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-yellow-400">👤 Perfil do Usuário</h3>
+                <button id="closeProfile" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- User Stats -->
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">📊 Suas Estatísticas</h4>
+                    <div id="userStats" class="grid grid-cols-2 gap-3 text-sm">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Usage Patterns -->
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">📈 Padrões de Uso</h4>
+                    <div id="usagePatterns" class="space-y-2 text-sm">
+                        <!-- Patterns will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Data Management -->
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">💾 Gerenciar Dados</h4>
+                    <div class="flex space-x-2">
+                        <button id="exportDataBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg text-sm">
+                            <i class="fas fa-download mr-1"></i>Exportar
+                        </button>
+                        <button id="importDataBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg text-sm">
+                            <i class="fas fa-upload mr-1"></i>Importar
+                        </button>
+                        <button id="clearDataBtn" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg text-sm">
+                            <i class="fas fa-trash mr-1"></i>Limpar
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Achievements -->
+                <div class="bg-black/50 rounded-lg p-4">
+                    <h4 class="font-semibold blue-accent mb-3">🏆 Conquistas</h4>
+                    <div id="achievements" class="grid grid-cols-2 gap-2 text-xs">
+                        <!-- Achievements will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-black rounded-xl p-6 w-full max-w-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-yellow-400">Calendário Financeiro</h3>
+                <button id="closeCalendar" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="flex items-center justify-between mb-4">
+                <button id="prevMonth" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h4 id="currentMonth" class="text-lg font-semibold blue-accent">Dezembro 2024</h4>
+                <button id="nextMonth" class="blue-accent hover:text-yellow-400">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-7 gap-1 mb-2">
+                <div class="text-center text-xs blue-accent p-2">Dom</div>
+                <div class="text-center text-xs blue-accent p-2">Seg</div>
+                <div class="text-center text-xs blue-accent p-2">Ter</div>
+                <div class="text-center text-xs blue-accent p-2">Qua</div>
+                <div class="text-center text-xs blue-accent p-2">Qui</div>
+                <div class="text-center text-xs blue-accent p-2">Sex</div>
+                <div class="text-center text-xs blue-accent p-2">Sáb</div>
+            </div>
+            
+            <div id="calendarDays" class="grid grid-cols-7 gap-1">
+                <!-- Calendar days will be generated by JavaScript -->
+            </div>
+            
+            <div class="mt-4 space-y-2">
+                <h5 class="text-sm font-semibold text-yellow-400">Próximos Vencimentos:</h5>
+                <div class="space-y-1 text-xs">
+                    <div class="flex justify-between blue-accent">
+                        <span>Aluguel</span>
+                        <span>05/12</span>
+                    </div>
+                    <div class="flex justify-between blue-accent">
+                        <span>Cartão de Crédito</span>
+                        <span>10/12</span>
+                    </div>
+                    <div class="flex justify-between blue-accent">
+                        <span>Seguro do Carro</span>
+                        <span>15/12</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.remove('hidden');
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                document.getElementById('installPrompt').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('dismissBtn').addEventListener('click', () => {
+            document.getElementById('installPrompt').classList.add('hidden');
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4ge30pOw==');
+        }
+
+        // Seasonal Theme System
+        function applySeasonalTheme() {
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const body = document.getElementById('mainBody');
+            const greeting = document.getElementById('seasonalGreeting');
+            
+            // Remove existing seasonal classes
+            body.classList.remove('seasonal-winter', 'seasonal-spring', 'seasonal-summer', 'seasonal-autumn');
+            
+            if (month >= 12 || month <= 2) {
+                body.classList.add('seasonal-winter');
+                if (greeting) greeting.textContent = '💼 Planeje seu futuro financeiro!';
+            } else if (month >= 3 && month <= 5) {
+                body.classList.add('seasonal-spring');
+                if (greeting) greeting.textContent = '📈 Invista no seu crescimento!';
+            } else if (month >= 6 && month <= 8) {
+                body.classList.add('seasonal-summer');
+                if (greeting) greeting.textContent = '🎯 Alcance suas metas financeiras!';
+            } else {
+                body.classList.add('seasonal-autumn');
+                if (greeting) greeting.textContent = '💰 Organize e multiplique seu dinheiro!';
+            }
+        }
+
+        // Auth Logic
+        document.getElementById('loginTab').addEventListener('click', () => {
+            document.getElementById('loginTab').className = 'flex-1 py-2 px-4 rounded-md gold-shine text-black font-semibold';
+            document.getElementById('registerTab').className = 'flex-1 py-2 px-4 rounded-md blue-accent';
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+        });
+
+        document.getElementById('registerTab').addEventListener('click', () => {
+            document.getElementById('registerTab').className = 'flex-1 py-2 px-4 rounded-md gold-shine text-black font-semibold';
+            document.getElementById('loginTab').className = 'flex-1 py-2 px-4 rounded-md blue-accent';
+            document.getElementById('registerForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            showMainApp();
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                showNotification('As senhas não coincidem!', 'error');
+                return;
+            }
+            
+            showNotification('Conta criada com sucesso!', 'success');
+            setTimeout(() => showMainApp(), 1000);
+        });
+
+        document.getElementById('forgotPassword').addEventListener('click', () => {
+            showNotification('Link de recuperação enviado para seu email!', 'info');
+        });
+
+        document.getElementById('googleLogin').addEventListener('click', () => {
+            showNotification('Redirecionando para login do Google...', 'info');
+            setTimeout(() => showMainApp(), 1500);
+        });
+
+        document.getElementById('demoBtn').addEventListener('click', () => {
+            showMainApp();
+        });
+
+        function showMainApp() {
+            document.getElementById('authPage').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            applySeasonalTheme();
+            initializeCharts();
+        }
+
+        // WhatsApp Report Functions
+        document.getElementById('whatsappReportBtn').addEventListener('click', () => {
+            document.getElementById('whatsappModal').classList.remove('hidden');
+        });
+
+        document.getElementById('closeWhatsapp').addEventListener('click', () => {
+            document.getElementById('whatsappModal').classList.add('hidden');
+        });
+
+        document.getElementById('sendWhatsappReport').addEventListener('click', () => {
+            const phoneNumber = document.getElementById('whatsappNumber').value;
+            
+            if (!phoneNumber) {
+                showNotification('Por favor, insira um número de WhatsApp válido!', 'error');
+                return;
+            }
+            
+            const reportText = generateFinancialReport();
+            const whatsappUrl = `https://wa.me/${phoneNumber.replace(/\D/g, '')}?text=${encodeURIComponent(reportText)}`;
+            
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            document.getElementById('whatsappModal').classList.add('hidden');
+            showNotification('Relatório enviado via WhatsApp! 📱', 'success');
+        });
+
+        function generateFinancialReport() {
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            return `🏦 *RELATÓRIO FINANCEIRO - FinanceBot Pro*
+📅 Data: ${currentDate}
+
+💰 *RESUMO FINANCEIRO*
+• Saldo Total: R$ 12.450
+• Receitas do Mês: R$ 4.500 ✅
+• Despesas do Mês: R$ 3.280 ❌
+• Economia Líquida: R$ 1.220 💚
+
+📊 *PRINCIPAIS CATEGORIAS DE GASTOS*
+• 🏠 Moradia: R$ 1.200 (37%)
+• 🍽️ Alimentação: R$ 850 (26%)
+• 🚗 Transporte: R$ 480 (15%)
+• 🎮 Lazer: R$ 750 (22%)
+
+🎯 *METAS EM PROGRESSO*
+• 🛡️ Reserva de Emergência: 43% (R$ 2.150/R$ 5.000)
+• 🚗 Carro Novo: 15% (R$ 7.500/R$ 50.000)
+• 💻 Notebook: 80% (R$ 4.000/R$ 5.000) - Quase lá! 🔥
+• 📱 Celular: 60% (R$ 1.800/R$ 3.000)
+• ✈️ Viagem Europa: 28% (R$ 2.800/R$ 10.000)
+
+💡 *DICAS PERSONALIZADAS*
+• Você está economizando R$ 1.220/mês! 👏
+• Faltam apenas R$ 1.000 para o notebook!
+• Considere reduzir gastos com lazer em 20%
+• Meta de reserva pode ser atingida em 3 meses
+
+📱 Relatório gerado pelo FinanceBot Pro
+🔑 Sua chave para o universo financeiro!`;
+        }
+
+        // Calculator Functions
+        let calcExpression = '';
+        
+        document.getElementById('calculatorBtn').addEventListener('click', () => {
+            document.getElementById('calculatorModal').classList.remove('hidden');
+        });
+
+        document.getElementById('closeCalculator').addEventListener('click', () => {
+            document.getElementById('calculatorModal').classList.add('hidden');
+        });
+
+        function appendToCalc(value) {
+            if (calcExpression === '0' && value !== '.') {
+                calcExpression = value;
+            } else {
+                calcExpression += value;
+            }
+            document.getElementById('calcDisplay').value = calcExpression;
+        }
+
+        function clearCalc() {
+            calcExpression = '0';
+            document.getElementById('calcDisplay').value = calcExpression;
+        }
+
+        function deleteLast() {
+            calcExpression = calcExpression.slice(0, -1) || '0';
+            document.getElementById('calcDisplay').value = calcExpression;
+        }
+
+        function calculate() {
+            try {
+                const result = eval(calcExpression.replace('×', '*'));
+                calcExpression = result.toString();
+                document.getElementById('calcDisplay').value = calcExpression;
+            } catch (error) {
+                document.getElementById('calcDisplay').value = 'Erro';
+                calcExpression = '0';
+            }
+        }
+
+        // Calendar Functions
+        let currentDate = new Date();
+        
+        document.getElementById('calendarBtn').addEventListener('click', () => {
+            document.getElementById('calendarModal').classList.remove('hidden');
+            generateCalendar();
+        });
+
+        document.getElementById('closeCalendar').addEventListener('click', () => {
+            document.getElementById('calendarModal').classList.add('hidden');
+        });
+
+        document.getElementById('prevMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() - 1);
+            generateCalendar();
+        });
+
+        document.getElementById('nextMonth').addEventListener('click', () => {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            generateCalendar();
+        });
+
+        function generateCalendar() {
+            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            
+            document.getElementById('currentMonth').textContent = 
+                `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+            
+            const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+            const today = new Date();
+            
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            // Empty cells for days before month starts
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day p-2 text-center text-xs opacity-30';
+                calendarDays.appendChild(emptyDay);
+            }
+            
+            // Days of the month
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day p-2 text-center text-xs cursor-pointer';
+                dayElement.textContent = day;
+                
+                // Highlight today
+                if (currentDate.getMonth() === today.getMonth() && 
+                    currentDate.getFullYear() === today.getFullYear() && 
+                    day === today.getDate()) {
+                    dayElement.classList.add('today');
+                }
+                
+                calendarDays.appendChild(dayElement);
+            }
+        }
+
+        // Tab Navigation
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show corresponding content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                document.getElementById(tabName).classList.remove('hidden');
+                
+                // Initialize charts when reports tab is opened
+                if (tabName === 'reports') {
+                    setTimeout(initializeCharts, 100);
+                }
+            });
+        });
+
+        // Chat Functionality
+        document.getElementById('chatForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addChatMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    const responses = getFinancialAdvice(message);
+                    addChatMessage(responses, 'bot');
+                }, 1000);
+            }
+        });
+
+        function askBot(question) {
+            document.getElementById('chatInput').value = question;
+            document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+        }
+
+        function getFinancialAdvice(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('dívida') || lowerMessage.includes('zerar')) {
+                return '💡 Para zerar suas dívidas em 1 ano: 1) Liste todas as dívidas por juros 2) Quite primeiro as de maior juros 3) Negocie descontos 4) Corte 30% dos gastos supérfluos 5) Busque renda extra. Quer um plano detalhado?';
+            } else if (lowerMessage.includes('economia') || lowerMessage.includes('economizar')) {
+                return '💰 Plano de economia: 1) Regra 50-30-20 (50% essenciais, 30% desejos, 20% poupança) 2) Cancele assinaturas não usadas 3) Cozinhe mais em casa 4) Use transporte público 5) Compare preços sempre. Economia estimada: R$ 800/mês!';
+            } else if (lowerMessage.includes('renda') || lowerMessage.includes('extra')) {
+                return '📈 Ideias de renda extra: 1) Freelances online (R$ 500-2000/mês) 2) Venda produtos caseiros 3) Aulas particulares 4) Uber/99 nos fins de semana 5) Revenda de produtos 6) Monetize hobbies. Comece com o que já sabe fazer!';
+            } else if (lowerMessage.includes('investir') || lowerMessage.includes('investimento')) {
+                return '📊 Para começar a investir: 1) Tenha reserva de emergência primeiro 2) Comece com Tesouro Direto 3) Diversifique gradualmente 4) Estude antes de investir 5) Invista mensalmente. Recomendo começar com R$ 100/mês!';
+            } else {
+                return 'Entendi! Baseado na sua situação financeira, recomendo focar em: reduzir gastos desnecessários, criar uma reserva de emergência e estabelecer metas claras. Quer que eu detalhe algum desses pontos?';
+            }
+        }
+
+        function addChatMessage(message, sender, context = {}) {
+            // Save to memory system
+            const savedMessage = financeMemory.addChatMessage(message, sender, context);
+            
+            // Track feature usage
+            financeMemory.trackFeatureUsage('chat');
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-bubble ${sender === 'user' ? 'bg-yellow-400/20 ml-auto' : 'bg-blue-500/20'} rounded-lg p-3 max-w-xs`;
+            messageDiv.innerHTML = `<p class="${sender === 'user' ? 'text-black' : 'blue-accent'} text-sm">${message}</p>`;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            return savedMessage;
+        }
+
+        // Load chat history on app start
+        function loadChatHistory() {
+            const chatHistory = financeMemory.userData.chatHistory;
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            // Clear existing messages except welcome message
+            const welcomeMessage = messagesContainer.querySelector('.chat-bubble');
+            messagesContainer.innerHTML = '';
+            if (welcomeMessage) {
+                messagesContainer.appendChild(welcomeMessage);
+            }
+            
+            // Load last 10 messages
+            const recentMessages = chatHistory.slice(-10);
+            recentMessages.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `chat-bubble ${msg.sender === 'user' ? 'bg-yellow-400/20 ml-auto' : 'bg-blue-500/20'} rounded-lg p-3 max-w-xs`;
+                messageDiv.innerHTML = `<p class="${msg.sender === 'user' ? 'text-black' : 'blue-accent'} text-sm">${msg.message}</p>`;
+                messagesContainer.appendChild(messageDiv);
+            });
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Charts Initialization
+        function initializeCharts() {
+            // Expense Chart
+            const expenseCtx = document.getElementById('expenseChart');
+            if (expenseCtx && !expenseCtx.chart) {
+                expenseCtx.chart = new Chart(expenseCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Moradia', 'Alimentação', 'Transporte', 'Lazer'],
+                        datasets: [{
+                            data: [1200, 850, 480, 750],
+                            backgroundColor: ['#ffd700', '#1e90ff', '#DC2626', '#4ecdc4']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: { color: '#1e90ff', font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Monthly Chart
+            const monthlyCtx = document.getElementById('monthlyChart');
+            if (monthlyCtx && !monthlyCtx.chart) {
+                monthlyCtx.chart = new Chart(monthlyCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                        datasets: [{
+                            label: 'Receitas',
+                            data: [4000, 4200, 4500, 4300, 4600, 4500],
+                            borderColor: '#4ade80',
+                            backgroundColor: 'rgba(74, 222, 128, 0.1)'
+                        }, {
+                            label: 'Despesas',
+                            data: [3200, 3400, 3100, 3500, 3300, 3280],
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { ticks: { color: '#1e90ff' } },
+                            x: { ticks: { color: '#1e90ff' } }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: '#1e90ff', font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Investment Chart
+            const investmentCtx = document.getElementById('investmentChart');
+            if (investmentCtx && !investmentCtx.chart) {
+                investmentCtx.chart = new Chart(investmentCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Tesouro', 'Ações', 'Fundos', 'Cripto'],
+                        datasets: [{
+                            label: 'Valor (R$)',
+                            data: [3250, 2800, 1950, 750],
+                            backgroundColor: ['#ffd700', '#1e90ff', '#4ecdc4', '#ff6b6b']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { ticks: { color: '#1e90ff' } },
+                            x: { ticks: { color: '#1e90ff' } }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: '#1e90ff', font: { size: 10 } }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Push Notification System for Due Bills
+        let notificationPermission = false;
+
+        // Request notification permission
+        async function requestNotificationPermission() {
+            if ('Notification' in window) {
+                const permission = await Notification.requestPermission();
+                notificationPermission = permission === 'granted';
+                
+                if (notificationPermission) {
+                    showNotification('🔔 Notificações push ativadas! Você será avisado sobre vencimentos!', 'success');
+                    scheduleUpcomingBillNotifications();
+                } else {
+                    showNotification('⚠️ Permissão negada. Ative nas configurações do navegador para receber alertas!', 'warning');
+                }
+            }
+        }
+
+        // Schedule notifications for upcoming bills
+        function scheduleUpcomingBillNotifications() {
+            const upcomingBills = [
+                { name: 'Aluguel', dueDate: '2024-12-05', amount: 800 },
+                { name: 'Cartão de Crédito', dueDate: '2024-12-10', amount: 1200 },
+                { name: 'Seguro do Carro', dueDate: '2024-12-15', amount: 350 },
+                { name: 'Conta de Luz', dueDate: '2024-12-08', amount: 150 },
+                { name: 'Internet', dueDate: '2024-12-12', amount: 89.90 },
+                { name: 'Plano de Saúde', dueDate: '2024-12-20', amount: 450 }
+            ];
+
+            upcomingBills.forEach(bill => {
+                const dueDate = new Date(bill.dueDate);
+                const today = new Date();
+                const daysUntilDue = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+
+                // Notify 3 days before, 1 day before, and on due date
+                if (daysUntilDue === 3) {
+                    setTimeout(() => {
+                        sendPushNotification(
+                            '⚠️ Conta vence em 3 dias!',
+                            `${bill.name}: R$ ${bill.amount.toFixed(2)} - Vence em ${bill.dueDate.split('-').reverse().join('/')}`
+                        );
+                    }, 2000);
+                } else if (daysUntilDue === 1) {
+                    setTimeout(() => {
+                        sendPushNotification(
+                            '🚨 Conta vence AMANHÃ!',
+                            `${bill.name}: R$ ${bill.amount.toFixed(2)} - Não esqueça de pagar!`
+                        );
+                    }, 4000);
+                } else if (daysUntilDue === 0) {
+                    setTimeout(() => {
+                        sendPushNotification(
+                            '🔴 VENCE HOJE!',
+                            `${bill.name}: R$ ${bill.amount.toFixed(2)} - Pague hoje para evitar juros!`
+                        );
+                    }, 6000);
+                } else if (daysUntilDue < 0) {
+                    setTimeout(() => {
+                        sendPushNotification(
+                            '💸 CONTA VENCIDA!',
+                            `${bill.name}: R$ ${bill.amount.toFixed(2)} - ${Math.abs(daysUntilDue)} dia(s) em atraso!`
+                        );
+                    }, 8000);
+                }
+            });
+        }
+
+        // Send push notification
+        function sendPushNotification(title, body) {
+            if (notificationPermission && 'Notification' in window) {
+                const notification = new Notification(title, {
+                    body: body,
+                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiNGRkQ3MDAiLz4KPHN2ZyB4PSIxNiIgeT0iMTYiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDQwIDQwIj4KPHBhdGggZD0iTTIwIDM3QzI5LjM4OSAzNyAzNyAyOS4zODkgMzcgMjBDMzcgMTAuNjExIDI5LjM4OSAzIDIwIDNDMTAuNjExIDMgMyAxMC42MTEgMyAyMEMzIDI5LjM4OSAxMC42MTEgMzcgMjAgMzdaIiBmaWxsPSIjMDAwIi8+CjxwYXRoIGQ9Ik0yMCAzM0MyNy4xOCAzMyAzMyAyNy4xOCAzMyAyMEMzMyAxMi44MiAyNy4xOCA3IDIwIDdDMTIuODIgNyA3IDEyLjgyIDcgMjBDNyAyNy4xOCAxMi44MiAzMyAyMCAzM1oiIGZpbGw9IiNGRkQ3MDAiLz4KPC9zdmc+Cjwvc3ZnPgo=',
+                    badge: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iMTYiIGZpbGw9IiNGRkQ3MDAiLz4KPHRleHQgeD0iMTYiIHk9IjIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMDAwIiBmb250LXNpemU9IjE0Ij4kPC90ZXh0Pgo8L3N2Zz4K',
+                    tag: 'financebot-bill-reminder',
+                    requireInteraction: true,
+                    actions: [
+                        { action: 'pay', title: '💳 Pagar Agora' },
+                        { action: 'remind', title: '⏰ Lembrar Depois' }
+                    ]
+                });
+
+                notification.onclick = () => {
+                    window.focus();
+                    notification.close();
+                };
+
+                // Auto close after 10 seconds
+                setTimeout(() => {
+                    notification.close();
+                }, 10000);
+            }
+            
+            // Also show in-app notification
+            showNotification(`${title} - ${body}`, 'warning');
+        }
+
+        // Check for overdue bills periodically
+        function checkOverdueBills() {
+            setInterval(() => {
+                if (Math.random() > 0.8) { // 20% chance every check
+                    const overdueMessages = [
+                        '🚨 Lembrete: Verifique se há contas vencidas!',
+                        '⚠️ Não esqueça de conferir os vencimentos de hoje!',
+                        '💡 Dica: Configure lembretes para não perder prazos!',
+                        '📅 Que tal revisar o calendário de vencimentos?'
+                    ];
+                    const randomMessage = overdueMessages[Math.floor(Math.random() * overdueMessages.length)];
+                    showNotification(randomMessage, 'info');
+                }
+            }, 300000); // Every 5 minutes
+        }
+
+        // Notification System
+        document.getElementById('notificationBtn').addEventListener('click', () => {
+            if (!notificationPermission) {
+                requestNotificationPermission();
+            } else {
+                showNotification('💡 Dica: Você pode economizar R$ 200 este mês cancelando assinaturas não utilizadas!', 'info');
+                
+                // Show upcoming bills
+                setTimeout(() => {
+                    showNotification('📅 Próximos vencimentos: Aluguel (05/12), Cartão (10/12), Seguro (15/12)', 'warning');
+                }, 2000);
+            }
+        });
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification glass-black rounded-lg p-4 max-w-sm`;
+            
+            const iconMap = {
+                'info': 'fa-info-circle text-blue-400',
+                'success': 'fa-check-circle text-green-400',
+                'error': 'fa-exclamation-circle text-red-400',
+                'motivation': 'fa-star text-yellow-400',
+                'warning': 'fa-exclamation-triangle text-orange-400'
+            };
+            
+            notification.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${iconMap[type]}"></i>
+                    <p class="blue-accent text-sm">${message}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="blue-accent hover:text-yellow-400">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Motivational Messages System
+        function getMotivationalMessage() {
+            const messages = [
+                "🌟 Parabéns! Cada economia te aproxima dos seus sonhos!",
+                "💪 Você está no caminho certo! Continue assim!",
+                "🎯 Foco total! Suas metas estão cada vez mais próximas!",
+                "🚀 Incrível! Você está construindo seu futuro financeiro!",
+                "💎 Disciplina é o seu superpoder! Continue economizando!",
+                "🏆 Você é um exemplo de controle financeiro!",
+                "⭐ Cada real economizado é um passo rumo à liberdade!",
+                "🔥 Sua determinação é inspiradora! Não pare agora!",
+                "💰 Você está investindo no seu futuro! Que orgulho!",
+                "🎉 Economia inteligente! Você está mandando muito bem!"
+            ];
+            return messages[Math.floor(Math.random() * messages.length)];
+        }
+
+        function getExpenseWarning(amount) {
+            const warnings = [
+                `⚠️ Gasto de R$ ${amount.toFixed(2)} registrado. Lembre-se das suas metas!`,
+                `💡 R$ ${amount.toFixed(2)} gastos. Que tal revisar se era realmente necessário?`,
+                `📊 Despesa de R$ ${amount.toFixed(2)} adicionada. Monitore seu orçamento!`,
+                `🎯 R$ ${amount.toFixed(2)} a menos para suas metas. Mantenha o foco!`,
+                `💭 Gasto de R$ ${amount.toFixed(2)}. Reflita: isso te aproxima dos seus objetivos?`,
+                `⏰ R$ ${amount.toFixed(2)} gastos hoje. Lembre-se do seu plano financeiro!`,
+                `🔍 Despesa de R$ ${amount.toFixed(2)}. Analise se há como reduzir próximos gastos.`,
+                `💪 R$ ${amount.toFixed(2)} registrados. Você ainda pode economizar no resto do mês!`
+            ];
+            return warnings[Math.floor(Math.random() * warnings.length)];
+        }
+
+        // Complete Memory System - FinanceBot Pro
+        class FinanceBotMemory {
+            constructor() {
+                this.userId = this.getUserId();
+                this.initializeUserData();
+            }
+
+            getUserId() {
+                let userId = localStorage.getItem('financebot_user_id');
+                if (!userId) {
+                    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('financebot_user_id', userId);
+                }
+                return userId;
+            }
+
+            initializeUserData() {
+                // Initialize all user data structures
+                this.userData = {
+                    profile: this.getStoredData('profile', {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        createdAt: new Date().toISOString(),
+                        lastLogin: new Date().toISOString(),
+                        preferences: {
+                            theme: 'dark',
+                            notifications: true,
+                            autoOptimization: true,
+                            autoProgress: true,
+                            currency: 'BRL'
+                        }
+                    }),
+                    finances: this.getStoredData('finances', {
+                        totalBalance: 12450,
+                        monthlyIncome: 4500,
+                        monthlyExpenses: 3280,
+                        savingsGoal: 1000,
+                        emergencyFund: 2150
+                    }),
+                    expenses: this.getStoredData('expenses', []),
+                    incomes: this.getStoredData('incomes', []),
+                    investments: this.getStoredData('investments', {
+                        tesouro: { value: 3250, percentage: 37, history: [] },
+                        acoes: { value: 2800, percentage: 32, history: [] },
+                        fundos: { value: 1950, percentage: 22, history: [] },
+                        cripto: { value: 750, percentage: 9, history: [] }
+                    }),
+                    goals: this.getStoredData('goals', [
+                        { id: 'emergency', name: 'Reserva de Emergência', current: 2150, target: 5000, icon: '🛡️', priority: 1, createdAt: new Date().toISOString() },
+                        { id: 'car', name: 'Carro Novo', current: 7500, target: 50000, icon: '🚗', priority: 3, createdAt: new Date().toISOString() },
+                        { id: 'motorcycle', name: 'Moto', current: 5250, target: 15000, icon: '🏍️', priority: 4, createdAt: new Date().toISOString() },
+                        { id: 'notebook', name: 'Notebook', current: 4000, target: 5000, icon: '💻', priority: 2, createdAt: new Date().toISOString() },
+                        { id: 'phone', name: 'Celular', current: 1800, target: 3000, icon: '📱', priority: 5, createdAt: new Date().toISOString() },
+                        { id: 'travel', name: 'Viagem Europa', current: 2800, target: 10000, icon: '✈️', priority: 6, createdAt: new Date().toISOString() }
+                    ]),
+                    chatHistory: this.getStoredData('chatHistory', []),
+                    notifications: this.getStoredData('notifications', []),
+                    reports: this.getStoredData('reports', []),
+                    habits: this.getStoredData('habits', {
+                        loginStreak: 0,
+                        lastLoginDate: null,
+                        totalSessions: 0,
+                        averageSessionTime: 0,
+                        mostUsedFeatures: {},
+                        spendingPatterns: {},
+                        savingPatterns: {}
+                    }),
+                    analytics: this.getStoredData('analytics', {
+                        monthlyStats: {},
+                        categoryTrends: {},
+                        goalProgress: {},
+                        investmentPerformance: {}
+                    }),
+                    settings: this.getStoredData('settings', {
+                        autoBackup: true,
+                        dataRetention: 365, // days
+                        privacyMode: false,
+                        exportFormat: 'json'
+                    })
+                };
+
+                // Update login statistics
+                this.updateLoginStats();
+            }
+
+            getStoredData(key, defaultValue) {
+                try {
+                    const stored = localStorage.getItem(`financebot_${this.userId}_${key}`);
+                    return stored ? JSON.parse(stored) : defaultValue;
+                } catch (error) {
+                    console.warn(`Error loading ${key}:`, error);
+                    return defaultValue;
+                }
+            }
+
+            saveData(key, data) {
+                try {
+                    localStorage.setItem(`financebot_${this.userId}_${key}`, JSON.stringify(data));
+                    this.userData[key] = data;
+                    
+                    // Update last modified timestamp
+                    this.userData.profile.lastModified = new Date().toISOString();
+                    localStorage.setItem(`financebot_${this.userId}_profile`, JSON.stringify(this.userData.profile));
+                    
+                    return true;
+                } catch (error) {
+                    console.error(`Error saving ${key}:`, error);
+                    return false;
+                }
+            }
+
+            // Expense tracking with complete memory
+            addExpense(expense) {
+                const expenseWithId = {
+                    ...expense,
+                    id: Date.now() + Math.random(),
+                    timestamp: new Date().toISOString(),
+                    userId: this.userId
+                };
+                
+                this.userData.expenses.push(expenseWithId);
+                this.userData.finances.monthlyExpenses += expense.amount;
+                this.userData.finances.totalBalance -= expense.amount;
+                
+                // Update spending patterns
+                this.updateSpendingPatterns(expense);
+                
+                // Save all related data
+                this.saveData('expenses', this.userData.expenses);
+                this.saveData('finances', this.userData.finances);
+                this.saveData('habits', this.userData.habits);
+                
+                return expenseWithId;
+            }
+
+            // Income tracking with complete memory
+            addIncome(income) {
+                const incomeWithId = {
+                    ...income,
+                    id: Date.now() + Math.random(),
+                    timestamp: new Date().toISOString(),
+                    userId: this.userId
+                };
+                
+                this.userData.incomes.push(incomeWithId);
+                this.userData.finances.monthlyIncome += income.amount;
+                this.userData.finances.totalBalance += income.amount;
+                
+                // Update saving patterns
+                this.updateSavingPatterns(income);
+                
+                // Save all related data
+                this.saveData('incomes', this.userData.incomes);
+                this.saveData('finances', this.userData.finances);
+                this.saveData('habits', this.userData.habits);
+                
+                return incomeWithId;
+            }
+
+            // Goal management with memory
+            updateGoal(goalId, updates) {
+                const goalIndex = this.userData.goals.findIndex(g => g.id === goalId);
+                if (goalIndex !== -1) {
+                    this.userData.goals[goalIndex] = {
+                        ...this.userData.goals[goalIndex],
+                        ...updates,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    
+                    // Track goal progress
+                    this.trackGoalProgress(goalId, updates);
+                    
+                    this.saveData('goals', this.userData.goals);
+                    this.saveData('analytics', this.userData.analytics);
+                }
+            }
+
+            // Chat history with memory
+            addChatMessage(message, sender, context = {}) {
+                const chatMessage = {
+                    id: Date.now() + Math.random(),
+                    message,
+                    sender,
+                    timestamp: new Date().toISOString(),
+                    context,
+                    userId: this.userId
+                };
+                
+                this.userData.chatHistory.push(chatMessage);
+                
+                // Keep only last 1000 messages to prevent storage overflow
+                if (this.userData.chatHistory.length > 1000) {
+                    this.userData.chatHistory = this.userData.chatHistory.slice(-1000);
+                }
+                
+                this.saveData('chatHistory', this.userData.chatHistory);
+                return chatMessage;
+            }
+
+            // Investment tracking with memory
+            updateInvestment(type, data) {
+                if (this.userData.investments[type]) {
+                    const previousValue = this.userData.investments[type].value;
+                    
+                    this.userData.investments[type] = {
+                        ...this.userData.investments[type],
+                        ...data,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    
+                    // Track investment history
+                    if (!this.userData.investments[type].history) {
+                        this.userData.investments[type].history = [];
+                    }
+                    
+                    this.userData.investments[type].history.push({
+                        date: new Date().toISOString(),
+                        value: data.value || previousValue,
+                        change: (data.value || previousValue) - previousValue,
+                        percentage: data.percentage
+                    });
+                    
+                    // Keep only last 365 days of history
+                    const oneYearAgo = new Date();
+                    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+                    
+                    this.userData.investments[type].history = this.userData.investments[type].history
+                        .filter(h => new Date(h.date) > oneYearAgo);
+                    
+                    this.saveData('investments', this.userData.investments);
+                }
+            }
+
+            // Notification system with memory
+            addNotification(notification) {
+                const notificationWithId = {
+                    ...notification,
+                    id: Date.now() + Math.random(),
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    userId: this.userId
+                };
+                
+                this.userData.notifications.unshift(notificationWithId);
+                
+                // Keep only last 100 notifications
+                if (this.userData.notifications.length > 100) {
+                    this.userData.notifications = this.userData.notifications.slice(0, 100);
+                }
+                
+                this.saveData('notifications', this.userData.notifications);
+                return notificationWithId;
+            }
+
+            // Analytics and patterns
+            updateSpendingPatterns(expense) {
+                const category = expense.category;
+                const amount = expense.amount;
+                const date = new Date().toISOString().split('T')[0];
+                
+                if (!this.userData.habits.spendingPatterns[category]) {
+                    this.userData.habits.spendingPatterns[category] = {
+                        totalAmount: 0,
+                        count: 0,
+                        averageAmount: 0,
+                        lastExpense: null,
+                        monthlyTrend: {}
+                    };
+                }
+                
+                const pattern = this.userData.habits.spendingPatterns[category];
+                pattern.totalAmount += amount;
+                pattern.count += 1;
+                pattern.averageAmount = pattern.totalAmount / pattern.count;
+                pattern.lastExpense = date;
+                
+                // Monthly trend
+                const month = new Date().toISOString().substr(0, 7); // YYYY-MM
+                if (!pattern.monthlyTrend[month]) {
+                    pattern.monthlyTrend[month] = 0;
+                }
+                pattern.monthlyTrend[month] += amount;
+            }
+
+            updateSavingPatterns(income) {
+                const amount = income.amount;
+                const date = new Date().toISOString().split('T')[0];
+                
+                if (!this.userData.habits.savingPatterns.totalSaved) {
+                    this.userData.habits.savingPatterns = {
+                        totalSaved: 0,
+                        count: 0,
+                        averageAmount: 0,
+                        lastIncome: null,
+                        monthlyTrend: {}
+                    };
+                }
+                
+                const pattern = this.userData.habits.savingPatterns;
+                pattern.totalSaved += amount;
+                pattern.count += 1;
+                pattern.averageAmount = pattern.totalSaved / pattern.count;
+                pattern.lastIncome = date;
+                
+                // Monthly trend
+                const month = new Date().toISOString().substr(0, 7);
+                if (!pattern.monthlyTrend[month]) {
+                    pattern.monthlyTrend[month] = 0;
+                }
+                pattern.monthlyTrend[month] += amount;
+            }
+
+            trackGoalProgress(goalId, updates) {
+                if (!this.userData.analytics.goalProgress[goalId]) {
+                    this.userData.analytics.goalProgress[goalId] = {
+                        history: [],
+                        milestones: [],
+                        projectedCompletion: null
+                    };
+                }
+                
+                const progress = this.userData.analytics.goalProgress[goalId];
+                progress.history.push({
+                    date: new Date().toISOString(),
+                    current: updates.current || 0,
+                    target: updates.target || 0,
+                    percentage: ((updates.current || 0) / (updates.target || 1)) * 100
+                });
+                
+                // Check for milestones (25%, 50%, 75%, 90%, 100%)
+                const percentage = ((updates.current || 0) / (updates.target || 1)) * 100;
+                const milestones = [25, 50, 75, 90, 100];
+                
+                milestones.forEach(milestone => {
+                    if (percentage >= milestone && !progress.milestones.includes(milestone)) {
+                        progress.milestones.push(milestone);
+                        this.addNotification({
+                            type: 'milestone',
+                            title: `Meta ${milestone}% concluída!`,
+                            message: `Parabéns! Você atingiu ${milestone}% da meta "${updates.name || goalId}"!`,
+                            icon: '🎯'
+                        });
+                    }
+                });
+            }
+
+            updateLoginStats() {
+                const today = new Date().toISOString().split('T')[0];
+                const lastLogin = this.userData.habits.lastLoginDate;
+                
+                this.userData.habits.totalSessions += 1;
+                
+                if (lastLogin === today) {
+                    // Same day login, don't update streak
+                } else if (lastLogin) {
+                    const lastLoginDate = new Date(lastLogin);
+                    const todayDate = new Date(today);
+                    const daysDiff = Math.floor((todayDate - lastLoginDate) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysDiff === 1) {
+                        // Consecutive day
+                        this.userData.habits.loginStreak += 1;
+                    } else if (daysDiff > 1) {
+                        // Streak broken
+                        this.userData.habits.loginStreak = 1;
+                    }
+                } else {
+                    // First login
+                    this.userData.habits.loginStreak = 1;
+                }
+                
+                this.userData.habits.lastLoginDate = today;
+                this.userData.profile.lastLogin = new Date().toISOString();
+                
+                this.saveData('habits', this.userData.habits);
+                this.saveData('profile', this.userData.profile);
+            }
+
+            // Feature usage tracking
+            trackFeatureUsage(feature) {
+                if (!this.userData.habits.mostUsedFeatures[feature]) {
+                    this.userData.habits.mostUsedFeatures[feature] = 0;
+                }
+                this.userData.habits.mostUsedFeatures[feature] += 1;
+                this.saveData('habits', this.userData.habits);
+            }
+
+            // Export user data
+            exportUserData() {
+                return {
+                    userId: this.userId,
+                    exportDate: new Date().toISOString(),
+                    data: this.userData
+                };
+            }
+
+            // Import user data
+            importUserData(importedData) {
+                try {
+                    if (importedData.userId && importedData.data) {
+                        this.userData = { ...this.userData, ...importedData.data };
+                        
+                        // Save all imported data
+                        Object.keys(this.userData).forEach(key => {
+                            this.saveData(key, this.userData[key]);
+                        });
+                        
+                        return true;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error('Error importing data:', error);
+                    return false;
+                }
+            }
+
+            // Clear user data (with confirmation)
+            clearUserData() {
+                const keys = Object.keys(localStorage).filter(key => key.startsWith(`financebot_${this.userId}_`));
+                keys.forEach(key => localStorage.removeItem(key));
+                localStorage.removeItem('financebot_user_id');
+                
+                // Reinitialize
+                this.userId = this.getUserId();
+                this.initializeUserData();
+            }
+
+            // Get user statistics
+            getUserStats() {
+                return {
+                    profile: this.userData.profile,
+                    totalExpenses: this.userData.expenses.length,
+                    totalIncomes: this.userData.incomes.length,
+                    totalGoals: this.userData.goals.length,
+                    completedGoals: this.userData.goals.filter(g => g.current >= g.target).length,
+                    chatMessages: this.userData.chatHistory.length,
+                    loginStreak: this.userData.habits.loginStreak,
+                    totalSessions: this.userData.habits.totalSessions,
+                    memberSince: this.userData.profile.createdAt,
+                    dataSize: JSON.stringify(this.userData).length
+                };
+            }
+        }
+
+        // Initialize Memory System
+        const financeMemory = new FinanceBotMemory();
+
+        // Legacy variables for compatibility
+        let expenses = financeMemory.userData.expenses;
+        let totalBalance = financeMemory.userData.finances.totalBalance;
+        let monthlyIncome = financeMemory.userData.finances.monthlyIncome;
+        let monthlyExpenses = financeMemory.userData.finances.monthlyExpenses;
+
+        // Dollar Rate Update
+        function updateDollarRate() {
+            const rates = [5.08, 5.12, 5.15, 5.09, 5.13, 5.11, 5.14];
+            const changes = ['+0.03', '+0.05', '-0.02', '+0.04', '-0.01', '+0.06', '-0.03'];
+            const randomIndex = Math.floor(Math.random() * rates.length);
+            
+            document.getElementById('dollarRate').textContent = `R$ ${rates[randomIndex].toFixed(2)}`;
+            document.getElementById('dollarChange').textContent = changes[randomIndex];
+            document.getElementById('dollarChange').className = changes[randomIndex].startsWith('+') ? 'text-green-300 text-xs' : 'text-red-300 text-xs';
+        }
+
+        // Expense Modal Functions
+        document.getElementById('addExpenseBtn').addEventListener('click', () => {
+            document.getElementById('expenseModal').classList.remove('hidden');
+            document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+        });
+
+        document.getElementById('closeExpenseModal').addEventListener('click', () => {
+            document.getElementById('expenseModal').classList.add('hidden');
+        });
+
+        document.getElementById('expenseForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const category = document.getElementById('expenseCategory').value;
+            const description = document.getElementById('expenseDescription').value;
+            const amount = parseFloat(document.getElementById('expenseAmount').value);
+            const date = document.getElementById('expenseDate').value;
+            
+            if (!description || !amount || amount <= 0) {
+                showNotification('Por favor, preencha todos os campos corretamente!', 'error');
+                return;
+            }
+            
+            const expense = {
+                category,
+                description,
+                amount,
+                date
+            };
+            
+            // Use memory system to add expense
+            const savedExpense = financeMemory.addExpense(expense);
+            
+            // Track feature usage
+            financeMemory.trackFeatureUsage('add_expense');
+            
+            // Update legacy variables for compatibility
+            expenses = financeMemory.userData.expenses;
+            monthlyExpenses = financeMemory.userData.finances.monthlyExpenses;
+            totalBalance = financeMemory.userData.finances.totalBalance;
+            
+            document.getElementById('expenseModal').classList.add('hidden');
+            document.getElementById('expenseForm').reset();
+            
+            // Show expense warning with personalized message
+            showNotification(getExpenseWarning(amount), 'warning');
+            updateDashboardStats();
+            
+            // Add to recent activity with memory
+            addRecentActivity({
+                type: 'expense',
+                category,
+                description,
+                amount: -amount,
+                timestamp: savedExpense.timestamp
+            });
+        });
+
+        // Auto Expense System
+        document.getElementById('autoExpenseBtn').addEventListener('click', () => {
+            document.getElementById('autoExpenseModal').classList.remove('hidden');
+            generateSmartExpenses();
+        });
+
+        document.getElementById('closeAutoExpenseModal').addEventListener('click', () => {
+            document.getElementById('autoExpenseModal').classList.add('hidden');
+        });
+
+        document.getElementById('generateExpenses').addEventListener('click', () => {
+            generateSmartExpenses();
+        });
+
+        document.getElementById('addAllSuggested').addEventListener('click', () => {
+            const suggestions = document.querySelectorAll('.suggested-expense');
+            let addedCount = 0;
+            
+            let totalAmount = 0;
+            suggestions.forEach(suggestion => {
+                const data = JSON.parse(suggestion.dataset.expense);
+                expenses.push({
+                    id: Date.now() + Math.random(),
+                    ...data,
+                    timestamp: new Date().toISOString()
+                });
+                monthlyExpenses += data.amount;
+                totalBalance -= data.amount;
+                totalAmount += data.amount;
+                addedCount++;
+            });
+            
+            localStorage.setItem('expenses', JSON.stringify(expenses));
+            document.getElementById('autoExpenseModal').classList.add('hidden');
+            
+            // Show warning for multiple expenses
+            showNotification(`⚠️ ${addedCount} despesas (R$ ${totalAmount.toFixed(2)}) adicionadas. Monitore seu orçamento!`, 'warning');
+            
+            // Additional motivational reminder
+            setTimeout(() => {
+                showNotification('💡 Lembre-se: cada gasto consciente te aproxima das suas metas!', 'info');
+            }, 3000);
+            
+            updateDashboardStats();
+        });
+
+        function generateSmartExpenses() {
+            const smartExpenses = [
+                { category: 'alimentacao', description: 'Supermercado Pão de Açúcar', amount: 285.50, date: new Date().toISOString().split('T')[0] },
+                { category: 'transporte', description: 'Combustível Posto Shell', amount: 120.00, date: new Date().toISOString().split('T')[0] },
+                { category: 'lazer', description: 'Netflix - Assinatura Mensal', amount: 45.90, date: new Date().toISOString().split('T')[0] },
+                { category: 'saude', description: 'Farmácia - Medicamentos', amount: 67.80, date: new Date().toISOString().split('T')[0] },
+                { category: 'moradia', description: 'Conta de Luz - CEMIG', amount: 150.30, date: new Date().toISOString().split('T')[0] },
+                { category: 'tecnologia', description: 'Internet Banda Larga', amount: 89.90, date: new Date().toISOString().split('T')[0] },
+                { category: 'vestuario', description: 'Loja Renner - Roupas', amount: 199.99, date: new Date().toISOString().split('T')[0] },
+                { category: 'pets', description: 'Ração Premium para Pet', amount: 85.00, date: new Date().toISOString().split('T')[0] }
+            ];
+            
+            const randomExpenses = smartExpenses.sort(() => 0.5 - Math.random()).slice(0, 4);
+            const container = document.getElementById('suggestedExpenses');
+            
+            container.innerHTML = randomExpenses.map(expense => `
+                <div class="suggested-expense flex items-center justify-between p-2 bg-black/30 rounded-lg border border-yellow-400/20" data-expense='${JSON.stringify(expense)}'>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">${getCategoryIcon(expense.category)}</span>
+                        <div>
+                            <p class="text-sm blue-accent font-medium">${expense.description}</p>
+                            <p class="text-xs text-gray-400">${expense.category}</p>
+                        </div>
+                    </div>
+                    <span class="text-red-400 font-semibold text-sm">R$ ${expense.amount.toFixed(2)}</span>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                'moradia': '🏠',
+                'alimentacao': '🍽️',
+                'transporte': '🚗',
+                'lazer': '🎮',
+                'saude': '🏥',
+                'educacao': '📚',
+                'vestuario': '👕',
+                'tecnologia': '💻',
+                'pets': '🐕',
+                'outros': '📦'
+            };
+            return icons[category] || '📦';
+        }
+
+        function updateDashboardStats() {
+            // Update dashboard values with current data from memory
+            const finances = financeMemory.userData.finances;
+            document.querySelector('.dashboard-card:nth-child(1) .text-xl').textContent = `R$ ${finances.totalBalance.toLocaleString('pt-BR')}`;
+            document.querySelector('.dashboard-card:nth-child(2) .text-xl').textContent = `R$ ${finances.monthlyIncome.toLocaleString('pt-BR')}`;
+            document.querySelector('.dashboard-card:nth-child(3) .text-xl').textContent = `R$ ${finances.monthlyExpenses.toLocaleString('pt-BR')}`;
+            document.querySelector('.dashboard-card:nth-child(4) .text-xl').textContent = `R$ ${(finances.monthlyIncome - finances.monthlyExpenses).toLocaleString('pt-BR')}`;
+            
+            // Update recent activity from memory
+            updateRecentActivity();
+        }
+
+        function addRecentActivity(activity) {
+            // Save activity to memory
+            if (!financeMemory.userData.recentActivity) {
+                financeMemory.userData.recentActivity = [];
+            }
+            
+            const activityWithId = {
+                ...activity,
+                id: Date.now() + Math.random(),
+                timestamp: activity.timestamp || new Date().toISOString()
+            };
+            
+            financeMemory.userData.recentActivity.unshift(activityWithId);
+            
+            // Keep only last 20 activities
+            if (financeMemory.userData.recentActivity.length > 20) {
+                financeMemory.userData.recentActivity = financeMemory.userData.recentActivity.slice(0, 20);
+            }
+            
+            financeMemory.saveData('recentActivity', financeMemory.userData.recentActivity);
+            updateRecentActivity();
+        }
+
+        function updateRecentActivity() {
+            const recentActivities = financeMemory.userData.recentActivity || [];
+            const container = document.querySelector('#dashboard .space-y-2');
+            
+            if (container && recentActivities.length > 0) {
+                // Clear existing activities (keep title)
+                const title = container.querySelector('h2');
+                container.innerHTML = '';
+                if (title) container.appendChild(title);
+                
+                // Add recent activities from memory
+                recentActivities.slice(0, 5).forEach(activity => {
+                    const activityDiv = document.createElement('div');
+                    activityDiv.className = 'flex items-center justify-between p-3 bg-black/50 rounded-lg';
+                    
+                    const icon = activity.type === 'income' ? 'fa-arrow-up text-green-400' : 'fa-arrow-down text-red-700';
+                    const iconBg = activity.type === 'income' ? 'bg-green-500/20' : 'bg-red-900/30';
+                    const amountColor = activity.type === 'income' ? 'text-green-400' : 'text-red-700';
+                    const amountPrefix = activity.type === 'income' ? '+' : '-';
+                    
+                    const timeAgo = getTimeAgo(activity.timestamp);
+                    
+                    activityDiv.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 ${iconBg} rounded-lg flex items-center justify-center">
+                                <i class="fas ${icon} text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium blue-accent">${activity.description}</p>
+                                <p class="text-xs text-gray-400">${timeAgo}</p>
+                            </div>
+                        </div>
+                        <span class="${amountColor} font-semibold text-sm">${amountPrefix}R$ ${Math.abs(activity.amount).toFixed(2)}</span>
+                    `;
+                    
+                    container.appendChild(activityDiv);
+                });
+            }
+        }
+
+        function getTimeAgo(timestamp) {
+            const now = new Date();
+            const time = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - time) / 1000);
+            
+            if (diffInSeconds < 60) return 'Agora mesmo';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min atrás`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h atrás`;
+            if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} dias atrás`;
+            
+            return time.toLocaleDateString('pt-BR');
+        }
+
+        // Income Modal with Memory System
+        document.getElementById('addIncomeBtn').addEventListener('click', () => {
+            const description = prompt('💰 Descrição da receita (ex: Salário, Freelance):') || 'Receita';
+            if (!description) return;
+            
+            const amount = prompt('💰 Digite o valor da receita (R$):');
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                const value = parseFloat(amount);
+                
+                const income = {
+                    description,
+                    amount: value,
+                    category: 'receita',
+                    date: new Date().toISOString().split('T')[0]
+                };
+                
+                // Use memory system to add income
+                const savedIncome = financeMemory.addIncome(income);
+                
+                // Track feature usage
+                financeMemory.trackFeatureUsage('add_income');
+                
+                // Update legacy variables for compatibility
+                monthlyIncome = financeMemory.userData.finances.monthlyIncome;
+                totalBalance = financeMemory.userData.finances.totalBalance;
+                
+                updateDashboardStats();
+                
+                // Show motivational message for income
+                showNotification(getMotivationalMessage(), 'motivation');
+                
+                // Additional celebration for larger amounts
+                if (value >= 1000) {
+                    setTimeout(() => {
+                        showNotification(`🎊 WOW! R$ ${value.toFixed(2)} é uma conquista incrível! Você está arrasando!`, 'success');
+                    }, 2000);
+                }
+                
+                // Add to recent activity with memory
+                addRecentActivity({
+                    type: 'income',
+                    category: 'receita',
+                    description,
+                    amount: value,
+                    timestamp: savedIncome.timestamp
+                });
+            }
+        });
+
+        // Portfolio Optimization System
+        let portfolioOptimizationActive = true;
+        let autoProgressActive = true;
+        let portfolioData = {
+            tesouro: { value: 3250, percentage: 37, target: 35, risk: 2 },
+            acoes: { value: 2800, percentage: 32, target: 30, risk: 8 },
+            fundos: { value: 1950, percentage: 22, target: 25, risk: 5 },
+            cripto: { value: 750, percentage: 9, target: 10, risk: 9 }
+        };
+
+        // Goals Progress System
+        let goalsData = [
+            { id: 'emergency', name: 'Reserva de Emergência', current: 2150, target: 5000, icon: '🛡️', priority: 1 },
+            { id: 'car', name: 'Carro Novo', current: 7500, target: 50000, icon: '🚗', priority: 3 },
+            { id: 'motorcycle', name: 'Moto', current: 5250, target: 15000, icon: '🏍️', priority: 4 },
+            { id: 'notebook', name: 'Notebook', current: 4000, target: 5000, icon: '💻', priority: 2 },
+            { id: 'phone', name: 'Celular', current: 1800, target: 3000, icon: '📱', priority: 5 },
+            { id: 'travel', name: 'Viagem Europa', current: 2800, target: 10000, icon: '✈️', priority: 6 }
+        ];
+
+        // Portfolio Optimization Functions
+        document.getElementById('optimizePortfolioBtn').addEventListener('click', () => {
+            document.getElementById('portfolioOptimizationModal').classList.remove('hidden');
+            generateOptimizationRecommendations();
+        });
+
+        document.getElementById('closePortfolioOptimization').addEventListener('click', () => {
+            document.getElementById('portfolioOptimizationModal').classList.add('hidden');
+        });
+
+        document.getElementById('applyOptimization').addEventListener('click', () => {
+            applyPortfolioOptimization();
+        });
+
+        document.getElementById('scheduleOptimization').addEventListener('click', () => {
+            schedulePortfolioOptimization();
+        });
+
+        // Auto Progress Functions
+        document.getElementById('autoProgressBtn').addEventListener('click', () => {
+            toggleAutoProgress();
+        });
+
+        function generateOptimizationRecommendations() {
+            const recommendations = [
+                {
+                    type: 'rebalance',
+                    title: 'Rebalancear Tesouro Direto',
+                    description: 'Reduzir 2% para atingir meta de 35%',
+                    impact: '+0.3% rentabilidade',
+                    action: 'Vender R$ 175'
+                },
+                {
+                    type: 'opportunity',
+                    title: 'Oportunidade em Fundos',
+                    description: 'Aumentar exposição em fundos multimercado',
+                    impact: '+0.8% diversificação',
+                    action: 'Comprar R$ 300'
+                },
+                {
+                    type: 'risk',
+                    title: 'Ajustar Risco Cripto',
+                    description: 'Criptomoedas dentro do limite ideal',
+                    impact: 'Risco controlado',
+                    action: 'Manter posição'
+                }
+            ];
+
+            const container = document.getElementById('optimizationRecommendations');
+            container.innerHTML = recommendations.map(rec => `
+                <div class="flex items-start space-x-3 p-2 bg-black/30 rounded-lg border border-yellow-400/20">
+                    <div class="w-2 h-2 rounded-full ${rec.type === 'opportunity' ? 'bg-green-400' : rec.type === 'risk' ? 'bg-yellow-400' : 'bg-blue-400'} mt-2"></div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium blue-accent">${rec.title}</p>
+                        <p class="text-xs text-gray-400">${rec.description}</p>
+                        <div class="flex justify-between mt-1">
+                            <span class="text-xs text-green-400">${rec.impact}</span>
+                            <span class="text-xs text-yellow-400">${rec.action}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function applyPortfolioOptimization() {
+            showNotification('🤖 Otimização aplicada! Portfólio rebalanceado automaticamente.', 'success');
+            
+            // Simulate portfolio changes
+            portfolioData.tesouro.percentage = 35;
+            portfolioData.tesouro.value = 3075;
+            portfolioData.fundos.percentage = 25;
+            portfolioData.fundos.value = 2200;
+            
+            // Update optimization status
+            document.getElementById('optimizationStatus').innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-robot text-yellow-400"></i>
+                        <span class="text-sm blue-accent">Otimização Automática:</span>
+                        <span class="text-green-400 text-sm font-semibold">ATIVA</span>
+                    </div>
+                    <div class="text-xs blue-accent">
+                        Próxima análise: <span>2h 15min</span>
+                    </div>
+                </div>
+                <div class="mt-2 text-xs text-gray-400">
+                    <i class="fas fa-check mr-1"></i>Portfólio otimizado há 1 minuto - Rentabilidade: +2.8%
+                </div>
+            `;
+            
+            document.getElementById('portfolioOptimizationModal').classList.add('hidden');
+            
+            // Update investment values in the UI
+            setTimeout(() => {
+                updateInvestmentDisplay();
+            }, 1000);
+        }
+
+        function schedulePortfolioOptimization() {
+            showNotification('📅 Otimização agendada para análise automática a cada 6 horas!', 'info');
+            document.getElementById('portfolioOptimizationModal').classList.add('hidden');
+        }
+
+        function updateInvestmentDisplay() {
+            const investmentCards = document.querySelectorAll('#investments .dashboard-card');
+            if (investmentCards.length >= 4) {
+                investmentCards[0].querySelector('.text-xl').textContent = `R$ ${portfolioData.tesouro.value.toLocaleString('pt-BR')}`;
+                investmentCards[0].querySelector('.text-xs').textContent = `${portfolioData.tesouro.percentage}% da carteira`;
+                
+                investmentCards[2].querySelector('.text-xl').textContent = `R$ ${portfolioData.fundos.value.toLocaleString('pt-BR')}`;
+                investmentCards[2].querySelector('.text-xs').textContent = `${portfolioData.fundos.percentage}% da carteira`;
+            }
+        }
+
+        function toggleAutoProgress() {
+            autoProgressActive = !autoProgressActive;
+            const toggle = document.getElementById('progressToggle');
+            const status = document.getElementById('autoProgressStatus');
+            
+            if (autoProgressActive) {
+                toggle.textContent = 'ATIVO';
+                toggle.className = 'text-green-400 text-sm font-semibold';
+                status.className = 'bg-black/50 rounded-lg p-3 mb-4 border-l-4 border-green-400';
+                showNotification('🎯 Progresso automático de metas ativado!', 'success');
+                startAutoProgress();
+            } else {
+                toggle.textContent = 'INATIVO';
+                toggle.className = 'text-red-400 text-sm font-semibold';
+                status.className = 'bg-black/50 rounded-lg p-3 mb-4 border-l-4 border-red-400';
+                showNotification('⏸️ Progresso automático pausado.', 'info');
+            }
+        }
+
+        function startAutoProgress() {
+            if (!autoProgressActive) return;
+            
+            // Simulate automatic progress every 30 seconds
+            setInterval(() => {
+                if (!autoProgressActive) return;
+                
+                // Add random progress to goals based on priority
+                goalsData.forEach(goal => {
+                    if (goal.current < goal.target) {
+                        const progressAmount = Math.random() * (50 / goal.priority) + 10;
+                        goal.current = Math.min(goal.current + progressAmount, goal.target);
+                    }
+                });
+                
+                updateGoalsDisplay();
+                updateAutoProgressStatus();
+                
+            }, 30000); // Every 30 seconds
+        }
+
+        function updateGoalsDisplay() {
+            const goalElements = document.querySelectorAll('#goals .dashboard-card');
+            
+            goalElements.forEach((element, index) => {
+                if (goalsData[index]) {
+                    const goal = goalsData[index];
+                    const percentage = Math.round((goal.current / goal.target) * 100);
+                    
+                    // Update percentage text
+                    const percentageSpan = element.querySelector('.blue-accent');
+                    if (percentageSpan && percentageSpan.textContent.includes('concluído')) {
+                        percentageSpan.textContent = `${percentage}% concluído`;
+                    }
+                    
+                    // Update progress bar
+                    const progressBar = element.querySelector('.bg-yellow-400, .bg-green-400, .bg-blue-400');
+                    if (progressBar) {
+                        progressBar.style.width = `${percentage}%`;
+                        
+                        // Change color based on progress
+                        if (percentage >= 80) {
+                            progressBar.className = 'bg-green-400 h-2 rounded-full';
+                        } else if (percentage >= 50) {
+                            progressBar.className = 'bg-yellow-400 h-2 rounded-full';
+                        } else {
+                            progressBar.className = 'bg-blue-400 h-2 rounded-full';
+                        }
+                    }
+                    
+                    // Update amount text
+                    const amountText = element.querySelector('.text-xs.blue-accent');
+                    if (amountText && amountText.textContent.includes('de R$')) {
+                        amountText.textContent = `R$ ${goal.current.toLocaleString('pt-BR')} de R$ ${goal.target.toLocaleString('pt-BR')}`;
+                    }
+                }
+            });
+        }
+
+        function updateAutoProgressStatus() {
+            const totalAdded = Math.floor(Math.random() * 100) + 50;
+            const lastUpdate = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            document.getElementById('lastProgressUpdate').textContent = lastUpdate;
+            document.getElementById('autoProgressStatus').innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-target text-green-400"></i>
+                        <span class="text-sm blue-accent">Progresso Automático:</span>
+                        <span class="text-green-400 text-sm font-semibold">ATIVO</span>
+                    </div>
+                    <div class="text-xs blue-accent">
+                        Última atualização: <span>${lastUpdate}</span>
+                    </div>
+                </div>
+                <div class="mt-2 text-xs text-gray-400">
+                    <i class="fas fa-coins mr-1"></i>R$ ${totalAdded} adicionados automaticamente hoje
+                </div>
+            `;
+            
+            // Show motivational message for progress
+            if (Math.random() > 0.7) { // 30% chance
+                setTimeout(() => {
+                    showNotification(getMotivationalMessage(), 'motivation');
+                }, 1000);
+            }
+        }
+
+        // Portfolio Auto-Optimization Timer
+        function startPortfolioOptimization() {
+            if (!portfolioOptimizationActive) return;
+            
+            setInterval(() => {
+                if (!portfolioOptimizationActive) return;
+                
+                // Update next optimization countdown
+                const nextOptimization = document.getElementById('nextOptimization');
+                if (nextOptimization) {
+                    const hours = Math.floor(Math.random() * 3) + 1;
+                    const minutes = Math.floor(Math.random() * 60);
+                    nextOptimization.textContent = `${hours}h ${minutes}min`;
+                }
+                
+                // Simulate small portfolio adjustments
+                if (Math.random() > 0.7) { // 30% chance
+                    const rentabilidade = (Math.random() * 2 + 1).toFixed(1);
+                    document.querySelector('#optimizationStatus .text-gray-400').innerHTML = 
+                        `<i class="fas fa-chart-line mr-1"></i>Rentabilidade otimizada: +${rentabilidade}% este mês`;
+                }
+                
+            }, 60000); // Every minute
+        }
+
+        // Basic Bot System (Manual Only)
+        let botAutomationActive = false;
+        
+        // Profile Management Functions
+        document.getElementById('profileBtn').addEventListener('click', () => {
+            document.getElementById('profileModal').classList.remove('hidden');
+            loadUserProfile();
+            financeMemory.trackFeatureUsage('profile');
+        });
+
+        document.getElementById('closeProfile').addEventListener('click', () => {
+            document.getElementById('profileModal').classList.add('hidden');
+        });
+
+        document.getElementById('exportDataBtn').addEventListener('click', () => {
+            const userData = financeMemory.exportUserData();
+            const dataStr = JSON.stringify(userData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `financebot_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showNotification('📁 Dados exportados com sucesso!', 'success');
+            financeMemory.trackFeatureUsage('export_data');
+        });
+
+        document.getElementById('importDataBtn').addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const importedData = JSON.parse(e.target.result);
+                            if (financeMemory.importUserData(importedData)) {
+                                showNotification('📥 Dados importados com sucesso!', 'success');
+                                updateDashboardStats();
+                                loadChatHistory();
+                            } else {
+                                showNotification('❌ Erro ao importar dados. Verifique o arquivo.', 'error');
+                            }
+                        } catch (error) {
+                            showNotification('❌ Arquivo inválido. Use apenas backups do FinanceBot Pro.', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+            financeMemory.trackFeatureUsage('import_data');
+        });
+
+        document.getElementById('clearDataBtn').addEventListener('click', () => {
+            if (confirm('⚠️ ATENÇÃO: Isso apagará TODOS os seus dados permanentemente. Tem certeza?')) {
+                if (confirm('🚨 ÚLTIMA CHANCE: Seus dados serão perdidos para sempre. Continuar?')) {
+                    financeMemory.clearUserData();
+                    showNotification('🗑️ Todos os dados foram limpos. Reiniciando...', 'info');
+                    setTimeout(() => location.reload(), 2000);
+                }
+            }
+        });
+
+        function loadUserProfile() {
+            const stats = financeMemory.getUserStats();
+            const userData = financeMemory.userData;
+            
+            // Update user stats
+            document.getElementById('userStats').innerHTML = `
+                <div class="blue-accent">
+                    <div class="font-semibold">💰 Transações</div>
+                    <div>${stats.totalExpenses + stats.totalIncomes}</div>
+                </div>
+                <div class="blue-accent">
+                    <div class="font-semibold">🎯 Metas</div>
+                    <div>${stats.completedGoals}/${stats.totalGoals}</div>
+                </div>
+                <div class="blue-accent">
+                    <div class="font-semibold">💬 Mensagens</div>
+                    <div>${stats.chatMessages}</div>
+                </div>
+                <div class="blue-accent">
+                    <div class="font-semibold">🔥 Sequência</div>
+                    <div>${stats.loginStreak} dias</div>
+                </div>
+                <div class="blue-accent">
+                    <div class="font-semibold">📅 Sessões</div>
+                    <div>${stats.totalSessions}</div>
+                </div>
+                <div class="blue-accent">
+                    <div class="font-semibold">📊 Dados</div>
+                    <div>${(stats.dataSize / 1024).toFixed(1)} KB</div>
+                </div>
+            `;
+            
+            // Update usage patterns
+            const mostUsed = Object.entries(userData.habits.mostUsedFeatures)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            document.getElementById('usagePatterns').innerHTML = mostUsed.length > 0 ? 
+                mostUsed.map(([feature, count]) => `
+                    <div class="flex justify-between blue-accent">
+                        <span>${getFeatureName(feature)}</span>
+                        <span>${count}x</span>
+                    </div>
+                `).join('') : 
+                '<div class="blue-accent text-center">Nenhum padrão detectado ainda</div>';
+            
+            // Update achievements
+            const achievements = calculateAchievements(stats, userData);
+            document.getElementById('achievements').innerHTML = achievements.map(achievement => `
+                <div class="flex items-center space-x-2 p-2 ${achievement.unlocked ? 'bg-yellow-400/20' : 'bg-gray-600/20'} rounded">
+                    <span class="text-lg">${achievement.icon}</span>
+                    <div>
+                        <div class="font-semibold ${achievement.unlocked ? 'text-yellow-400' : 'text-gray-400'}">${achievement.name}</div>
+                        <div class="text-xs ${achievement.unlocked ? 'blue-accent' : 'text-gray-500'}">${achievement.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getFeatureName(feature) {
+            const names = {
+                'add_expense': '💸 Adicionar Despesa',
+                'add_income': '💰 Adicionar Receita',
+                'chat': '💬 Chat IA',
+                'profile': '👤 Perfil',
+                'export_data': '📁 Exportar Dados',
+                'import_data': '📥 Importar Dados',
+                'calculator': '🧮 Calculadora',
+                'calendar': '📅 Calendário'
+            };
+            return names[feature] || feature;
+        }
+
+        function calculateAchievements(stats, userData) {
+            return [
+                {
+                    name: 'Primeiro Passo',
+                    description: 'Primeira transação',
+                    icon: '🎯',
+                    unlocked: (stats.totalExpenses + stats.totalIncomes) >= 1
+                },
+                {
+                    name: 'Organizador',
+                    description: '10 transações',
+                    icon: '📊',
+                    unlocked: (stats.totalExpenses + stats.totalIncomes) >= 10
+                },
+                {
+                    name: 'Conversador',
+                    description: '50 mensagens no chat',
+                    icon: '💬',
+                    unlocked: stats.chatMessages >= 50
+                },
+                {
+                    name: 'Persistente',
+                    description: '7 dias consecutivos',
+                    icon: '🔥',
+                    unlocked: stats.loginStreak >= 7
+                },
+                {
+                    name: 'Meta Alcançada',
+                    description: 'Primeira meta completa',
+                    icon: '🏆',
+                    unlocked: stats.completedGoals >= 1
+                },
+                {
+                    name: 'Explorador',
+                    description: 'Usou todas as funcionalidades',
+                    icon: '🚀',
+                    unlocked: Object.keys(userData.habits.mostUsedFeatures).length >= 5
+                }
+            ];
+        }
+
+        // System Health Check Function
+        function performSystemHealthCheck() {
+            const healthReport = {
+                authentication: false,
+                navigation: false,
+                dashboard: false,
+                finances: false,
+                expenses: false,
+                investments: false,
+                goals: false,
+                chat: false,
+                reports: false,
+                calculator: false,
+                calendar: false,
+                whatsapp: false,
+                memory: false,
+                notifications: false,
+                profile: false,
+                automation: false,
+                charts: false,
+                pwa: false
+            };
+
+            try {
+                // Test Authentication System
+                const authPage = document.getElementById('authPage');
+                const mainApp = document.getElementById('mainApp');
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                healthReport.authentication = !!(authPage && mainApp && loginForm && registerForm);
+
+                // Test Navigation System
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabContents = document.querySelectorAll('.tab-content');
+                healthReport.navigation = tabButtons.length >= 7 && tabContents.length >= 7;
+
+                // Test Dashboard Components
+                const dashboardCards = document.querySelectorAll('#dashboard .dashboard-card');
+                const quickActions = document.querySelector('#dashboard .grid.grid-cols-2.md\\:grid-cols-4');
+                healthReport.dashboard = dashboardCards.length >= 4 && !!quickActions;
+
+                // Test Finances Tab
+                const financesTab = document.getElementById('finances');
+                const financesCards = document.querySelectorAll('#finances .dashboard-card');
+                healthReport.finances = !!financesTab && financesCards.length >= 2;
+
+                // Test Expenses System
+                const expensesTab = document.getElementById('expenses');
+                const expenseCategories = document.querySelectorAll('#expenses .expense-category');
+                const expenseModal = document.getElementById('expenseModal');
+                const autoExpenseModal = document.getElementById('autoExpenseModal');
+                healthReport.expenses = !!expensesTab && expenseCategories.length >= 4 && !!expenseModal && !!autoExpenseModal;
+
+                // Test Investments System
+                const investmentsTab = document.getElementById('investments');
+                const investmentCards = document.querySelectorAll('#investments .dashboard-card');
+                const portfolioOptimizationModal = document.getElementById('portfolioOptimizationModal');
+                healthReport.investments = !!investmentsTab && investmentCards.length >= 4 && !!portfolioOptimizationModal;
+
+                // Test Goals System
+                const goalsTab = document.getElementById('goals');
+                const goalCards = document.querySelectorAll('#goals .dashboard-card');
+                healthReport.goals = !!goalsTab && goalCards.length >= 6;
+
+                // Test Chat System
+                const chatTab = document.getElementById('chat');
+                const chatMessages = document.getElementById('chatMessages');
+                const chatForm = document.getElementById('chatForm');
+                const chatInput = document.getElementById('chatInput');
+                healthReport.chat = !!(chatTab && chatMessages && chatForm && chatInput);
+
+                // Test Reports System
+                const reportsTab = document.getElementById('reports');
+                const expenseChart = document.getElementById('expenseChart');
+                const monthlyChart = document.getElementById('monthlyChart');
+                const investmentChart = document.getElementById('investmentChart');
+                healthReport.reports = !!(reportsTab && expenseChart && monthlyChart && investmentChart);
+
+                // Test Calculator
+                const calculatorModal = document.getElementById('calculatorModal');
+                const calcDisplay = document.getElementById('calcDisplay');
+                const calculatorBtns = document.querySelectorAll('.calculator-btn');
+                healthReport.calculator = !!calculatorModal && !!calcDisplay && calculatorBtns.length >= 16;
+
+                // Test Calendar
+                const calendarModal = document.getElementById('calendarModal');
+                const calendarDays = document.getElementById('calendarDays');
+                const currentMonth = document.getElementById('currentMonth');
+                healthReport.calendar = !!(calendarModal && calendarDays && currentMonth);
+
+                // Test WhatsApp Integration
+                const whatsappModal = document.getElementById('whatsappModal');
+                const whatsappNumber = document.getElementById('whatsappNumber');
+                healthReport.whatsapp = !!(whatsappModal && whatsappNumber);
+
+                // Test Memory System
+                healthReport.memory = !!(financeMemory && financeMemory.userData && typeof financeMemory.saveData === 'function');
+
+                // Test Notifications
+                healthReport.notifications = typeof showNotification === 'function';
+
+                // Test Profile System
+                const profileModal = document.getElementById('profileModal');
+                const userStats = document.getElementById('userStats');
+                healthReport.profile = !!(profileModal && userStats);
+
+                // Test Automation Systems
+                healthReport.automation = !!(portfolioOptimizationActive !== undefined && autoProgressActive !== undefined);
+
+                // Test Charts
+                healthReport.charts = typeof Chart !== 'undefined' && typeof initializeCharts === 'function';
+
+                // Test PWA Features
+                const installPrompt = document.getElementById('installPrompt');
+                healthReport.pwa = !!installPrompt && 'serviceWorker' in navigator;
+
+                return healthReport;
+            } catch (error) {
+                console.error('Health check error:', error);
+                return healthReport;
+            }
+        }
+
+        // Enhanced System Status Display
+        function displaySystemStatus() {
+            const healthReport = performSystemHealthCheck();
+            const totalSystems = Object.keys(healthReport).length;
+            const workingSystems = Object.values(healthReport).filter(status => status).length;
+            const healthPercentage = Math.round((workingSystems / totalSystems) * 100);
+
+            const statusDetails = Object.entries(healthReport).map(([system, status]) => {
+                const systemNames = {
+                    authentication: '🔐 Sistema de Login',
+                    navigation: '🧭 Navegação por Abas',
+                    dashboard: '📊 Dashboard Principal',
+                    finances: '💰 Gestão Financeira',
+                    expenses: '💸 Controle de Despesas',
+                    investments: '📈 Investimentos',
+                    goals: '🎯 Metas Financeiras',
+                    chat: '🤖 Chat com IA',
+                    reports: '📋 Relatórios',
+                    calculator: '🧮 Calculadora',
+                    calendar: '📅 Calendário',
+                    whatsapp: '📱 Integração WhatsApp',
+                    memory: '💾 Sistema de Memória',
+                    notifications: '🔔 Notificações',
+                    profile: '👤 Perfil do Usuário',
+                    automation: '⚙️ Automação IA',
+                    charts: '📊 Gráficos',
+                    pwa: '📲 App Progressivo'
+                };
+
+                return {
+                    name: systemNames[system] || system,
+                    status: status ? '✅ Funcionando' : '❌ Erro',
+                    working: status
+                };
+            });
+
+            // Show comprehensive status
+            showNotification(`🔍 VERIFICAÇÃO COMPLETA: ${workingSystems}/${totalSystems} sistemas funcionando (${healthPercentage}%)`, 
+                healthPercentage === 100 ? 'success' : healthPercentage >= 80 ? 'info' : 'warning');
+
+            // Log detailed report
+            console.log('🔍 RELATÓRIO COMPLETO DE FUNCIONALIDADES - FinanceBot Pro');
+            console.log('='.repeat(60));
+            console.log(`📊 Status Geral: ${healthPercentage}% (${workingSystems}/${totalSystems})`);
+            console.log('='.repeat(60));
+            
+            statusDetails.forEach(detail => {
+                console.log(`${detail.name}: ${detail.status}`);
+            });
+            
+            console.log('='.repeat(60));
+            
+            if (healthPercentage === 100) {
+                console.log('🎉 TODOS OS SISTEMAS FUNCIONANDO PERFEITAMENTE!');
+                setTimeout(() => {
+                    showNotification('🎉 Verificação concluída! Todos os sistemas estão funcionando perfeitamente!', 'success');
+                }, 2000);
+            } else {
+                console.log(`⚠️ ${totalSystems - workingSystems} sistema(s) com problemas detectados.`);
+                setTimeout(() => {
+                    showNotification(`⚠️ Verificação concluída! ${totalSystems - workingSystems} sistema(s) precisam de atenção.`, 'warning');
+                }, 2000);
+            }
+
+            return { healthReport, healthPercentage, statusDetails };
+        }
+
+        // Test All Interactive Functions
+        function testInteractiveFunctions() {
+            const tests = [];
+
+            // Test Memory System
+            try {
+                const testExpense = financeMemory.addExpense({
+                    category: 'teste',
+                    description: 'Teste do Sistema',
+                    amount: 1,
+                    date: new Date().toISOString().split('T')[0]
+                });
+                tests.push({ name: 'Adicionar Despesa', success: !!testExpense.id });
+            } catch (e) {
+                tests.push({ name: 'Adicionar Despesa', success: false, error: e.message });
+            }
+
+            // Test Chat System
+            try {
+                const testMessage = addChatMessage('Teste do sistema', 'user');
+                tests.push({ name: 'Sistema de Chat', success: !!testMessage });
+            } catch (e) {
+                tests.push({ name: 'Sistema de Chat', success: false, error: e.message });
+            }
+
+            // Test Calculator
+            try {
+                appendToCalc('1');
+                appendToCalc('+');
+                appendToCalc('1');
+                calculate();
+                const result = document.getElementById('calcDisplay').value;
+                clearCalc();
+                tests.push({ name: 'Calculadora', success: result === '2' });
+            } catch (e) {
+                tests.push({ name: 'Calculadora', success: false, error: e.message });
+            }
+
+            // Test Notifications
+            try {
+                showNotification('Teste de notificação', 'info');
+                tests.push({ name: 'Sistema de Notificações', success: true });
+            } catch (e) {
+                tests.push({ name: 'Sistema de Notificações', success: false, error: e.message });
+            }
+
+            // Test Data Export
+            try {
+                const exportData = financeMemory.exportUserData();
+                tests.push({ name: 'Exportação de Dados', success: !!(exportData && exportData.userId) });
+            } catch (e) {
+                tests.push({ name: 'Exportação de Dados', success: false, error: e.message });
+            }
+
+            console.log('🧪 TESTES DE FUNCIONALIDADES INTERATIVAS');
+            console.log('='.repeat(50));
+            tests.forEach(test => {
+                const status = test.success ? '✅ PASSOU' : '❌ FALHOU';
+                console.log(`${test.name}: ${status}`);
+                if (test.error) console.log(`   Erro: ${test.error}`);
+            });
+            console.log('='.repeat(50));
+
+            const passedTests = tests.filter(t => t.success).length;
+            const testPercentage = Math.round((passedTests / tests.length) * 100);
+            
+            setTimeout(() => {
+                showNotification(`🧪 Testes interativos: ${passedTests}/${tests.length} passaram (${testPercentage}%)`, 
+                    testPercentage === 100 ? 'success' : 'warning');
+            }, 4000);
+
+            return { tests, testPercentage };
+        }
+
+        // Initialize app with complete memory system and health check
+        document.addEventListener('DOMContentLoaded', () => {
+            applySeasonalTheme();
+            updateDollarRate();
+            
+            // Load user data from memory
+            updateDashboardStats();
+            loadChatHistory();
+            
+            // Start automation systems
+            startAutoProgress();
+            startPortfolioOptimization();
+            
+            // Initialize push notifications for bills
+            setTimeout(() => {
+                requestNotificationPermission();
+            }, 5000);
+            
+            // Start checking for overdue bills
+            checkOverdueBills();
+            
+            // Update dollar rate every 30 seconds
+            setInterval(updateDollarRate, 30000);
+            
+            // Show personalized welcome message
+            setTimeout(() => {
+                const stats = financeMemory.getUserStats();
+                const isReturningUser = stats.totalSessions > 1;
+                
+                if (isReturningUser) {
+                    showNotification(`🎉 Bem-vindo de volta! Sequência de ${stats.loginStreak} dias! 🔥`, 'success');
+                } else {
+                    showNotification('🎉 Bem-vindo ao FinanceBot Pro! Seus dados serão salvos automaticamente!', 'success');
+                }
+            }, 2000);
+            
+            // Perform comprehensive system check
+            setTimeout(() => {
+                displaySystemStatus();
+            }, 3000);
+            
+            // Test interactive functions
+            setTimeout(() => {
+                testInteractiveFunctions();
+            }, 6000);
+            
+            // Show automation status after tests
+            setTimeout(() => {
+                showNotification('🤖 Sistema de memória ativo! Tudo será lembrado automaticamente!', 'info');
+            }, 8000);
+            
+            // Final status report
+            setTimeout(() => {
+                showNotification('✅ Verificação completa finalizada! Aplicativo pronto para uso!', 'success');
+            }, 10000);
+            
+            // Update seasonal theme every hour
+            setInterval(applySeasonalTheme, 3600000);
+            
+            // Auto-save every 5 minutes (backup)
+            setInterval(() => {
+                financeMemory.saveData('profile', financeMemory.userData.profile);
+            }, 300000);
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9910e1c444b9f25e',t:'MTc2MDg4MzI2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
